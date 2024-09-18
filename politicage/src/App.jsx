@@ -1,16 +1,15 @@
-
-import './App.css'
-import { Navbar } from './components/navbar'
+import { Navbar } from './components/Navbar'
 import './global.css'
+import { UserCadastro } from './components/UserCadastro'
 
 function App() {
 
   return (
-    <div className="container">
-      <header>
-        <Navbar/>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <UserCadastro />
+      <h1>Olá</h1>
+    </>
   )
 }
 
