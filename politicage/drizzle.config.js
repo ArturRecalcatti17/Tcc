@@ -7,6 +7,6 @@ export default defineConfig({
   schema: "./src/db/schema/schema.js",
   out: "./migrations",
   dbCredentials:{
-    url: 'postgresql://pocket_owner:eQfaJOBp4Io7@ep-yellow-union-a5sj0vil.us-east-2.aws.neon.tech/pocket?sslmode=requireS'
+    url: 'postgresql://empress_owner:x3HpFZGoIr6W@ep-old-water-a5znrwib.us-east-2.aws.neon.tech/empress?sslmode=require'
   }
 });

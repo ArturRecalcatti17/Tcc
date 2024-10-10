@@ -1,17 +1,12 @@
 import { integer, text, date, pgTable, uuid, pgEnum, decimal } from "drizzle-orm/pg-core";
 
-export const estadosBrasil = pgEnum('estados_brasil', [
-  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG',
-  'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
-]);
-
 export const userTable = pgTable('usuario', {
   id: uuid("id").defaultRandom().notNull().primaryKey(),
   nome: text('nome', { length: 256 }),
   data_nasc: date('data_nasc', { mode: 'date' }).notNull(),
   email: text('email', {length: 256}).notNull(),
   senha: text('senha').notNull(),
-  uf: estadosBrasil('uf').notNull(),
+  uf: text('uf').notNull(),
   cidade: text('cidade', { length: 256 })
 });
 
@@ -19,7 +14,7 @@ export const politicosTable = pgTable('politico', {
   id: uuid("id").defaultRandom().notNull().primaryKey(),
   nome: text('nome', { length: 256 }),
   dataNasc: date('data_nasc').notNull(),
-  uf: estadosBrasil('uf').notNull(),
+  uf: text('uf').notNull(),
   cidade: text('cidade', { length: 256 })
 });
 
