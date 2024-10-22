@@ -15,6 +15,13 @@
       "when": 1727818520161,
       "tag": "0001_aromatic_zemo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1729551037985,
+      "tag": "0002_special_wendell_vaughn",
+      "breakpoints": true
     }
   ]
 }

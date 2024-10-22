@@ -6,6 +6,7 @@ export const userTable = pgTable('usuario', {
   data_nasc: date('data_nasc', { mode: 'date' }).notNull(),
   email: text('email', {length: 256}).notNull(),
   senha: text('senha').notNull(),
+  cpf: text('cpf').notNull(),
   uf: text('uf').notNull(),
   cidade: text('cidade', { length: 256 })
 });

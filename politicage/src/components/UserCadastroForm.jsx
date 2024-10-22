@@ -25,6 +25,12 @@ export function UserCadastroForm() {
 		}
 	}, [estadoSelecionado]);
 
+	// Adicione esta função auxiliar no início do componente
+	function formatarCPF(cpf) {
+		cpf = cpf.replace(/\D/g, ''); // Remove caracteres não numéricos
+		return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+	}
+
 	async function handleFormSubmit(dados) {
 		try {
 			const dataNascimento = new Date(
@@ -45,6 +51,7 @@ export function UserCadastroForm() {
 				nome: dados.nome,
 				email: dados.email,
 				senha: dados.senha,
+				cpf: formatarCPF(dados.cpf),
 				uf: estadoSelecionado ? estadoSelecionado.sigla : '',
 				cidade: cidadeSelecionada ? cidadeSelecionada.nome : '',
 				data_nasc: dataNascimento

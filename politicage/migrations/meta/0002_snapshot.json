@@ -1,0 +1,273 @@
+{
+  "id": "8de4ed1c-acab-43f2-b7e4-045b28d0e65b",
+  "prevId": "5e9134eb-8490-4e77-87dc-4b4aab0b870b",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.consulta_despesas": {
+      "name": "consulta_despesas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "ano": {
+          "name": "ano",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mes": {
+          "name": "mes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "valor_liquido": {
+          "name": "valor_liquido",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.consultas_historico": {
+      "name": "consultas_historico",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "condicao_eleitoral": {
+          "name": "condicao_eleitoral",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descricao_status": {
+          "name": "descricao_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sigla_partido": {
+          "name": "sigla_partido",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.informacoes_dos_politicos": {
+      "name": "informacoes_dos_politicos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "partido": {
+          "name": "partido",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sexo": {
+          "name": "sexo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_historico": {
+          "name": "id_historico",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_despesas": {
+          "name": "id_despesas",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_politicos": {
+          "name": "id_politicos",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "informacoes_dos_politicos_id_historico_consultas_historico_id_fk": {
+          "name": "informacoes_dos_politicos_id_historico_consultas_historico_id_fk",
+          "tableFrom": "informacoes_dos_politicos",
+          "tableTo": "consultas_historico",
+          "columnsFrom": [
+            "id_historico"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "informacoes_dos_politicos_id_despesas_consulta_despesas_id_fk": {
+          "name": "informacoes_dos_politicos_id_despesas_consulta_despesas_id_fk",
+          "tableFrom": "informacoes_dos_politicos",
+          "tableTo": "consulta_despesas",
+          "columnsFrom": [
+            "id_despesas"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "informacoes_dos_politicos_id_politicos_politico_id_fk": {
+          "name": "informacoes_dos_politicos_id_politicos_politico_id_fk",
+          "tableFrom": "informacoes_dos_politicos",
+          "tableTo": "politico",
+          "columnsFrom": [
+            "id_politicos"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.politico": {
+      "name": "politico",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nome": {
+          "name": "nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_nasc": {
+          "name": "data_nasc",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "uf": {
+          "name": "uf",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cidade": {
+          "name": "cidade",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.usuario": {
+      "name": "usuario",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nome": {
+          "name": "nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_nasc": {
+          "name": "data_nasc",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "senha": {
+          "name": "senha",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cpf": {
+          "name": "cpf",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "uf": {
+          "name": "uf",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cidade": {
+          "name": "cidade",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
