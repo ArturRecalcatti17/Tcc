@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { db } from '../db/config';
 import { userTable } from '../db/schema/schema';
-
+import bcrypt from 'bcryptjs';
+import { eq } from 'drizzle-orm';
 
 export function UserCadastroForm() {
   
@@ -33,24 +34,38 @@ export function UserCadastroForm() {
 
 	async function handleFormSubmit(dados) {
 		try {
+			// Verifica se o CPF já existe no banco de dados
+			async function verificarCpfExistente(cpf) {
+				const cpfExistente = await db.select().from(userTable).where(eq(userTable.cpf, formatarCPF(cpf))).first();
+				return cpfExistente;
+			}
+
+			const cpfExistente = await verificarCpfExistente(dados.cpf);
+
+			if (cpfExistente) {
+				window.AbortControlleralert("CPF já cadastrado. Por favor, insira um CPF diferente.");
+				return;
+			}
+
 			const dataNascimento = new Date(
 				parseInt(dados.diaNascimento),
 				parseInt(dados.mesNascimento) - 1, 
 				parseInt(dados.anoNascimento),
-				
 			);
 
 			if (isNaN(dataNascimento.getTime())) {
 				throw new Error("Data de nascimento inválida");
-			}
+				}
+			const senhaEncriptada = await bcrypt.hash(dados.senha, 10);
 
 			const estadoSelecionado = estados.find(estado => estado.id === parseInt(dados.estado));
 			const cidadeSelecionada = cidades.find(cidade => cidade.id === parseInt(dados.cidade));
 			
+
 			await db.insert(userTable).values({
 				nome: dados.nome,
 				email: dados.email,
-				senha: dados.senha,
+				senha: senhaEncriptada,
 				cpf: formatarCPF(dados.cpf),
 				uf: estadoSelecionado ? estadoSelecionado.sigla : '',
 				cidade: cidadeSelecionada ? cidadeSelecionada.nome : '',
@@ -98,5 +113,3 @@ export function UserCadastroForm() {
 		</main>
 	);
 }
-
-export default UserCadastroForm;

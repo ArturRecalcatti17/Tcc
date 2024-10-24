@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form"
 import { db } from "../db/config"
 import { userTable } from "../db/schema/schema";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
+import bcrypt from 'bcryptjs'; // Certifique-se de instalar esta biblioteca
 
 
 export function UserLoginForm() {
@@ -10,27 +11,28 @@ export function UserLoginForm() {
 
 
   async function handleAutLogin(dados) {
+    try {
+      // Consulta o banco de dados para encontrar o usuário pelo email
+      const user = await db.select().from(userTable).where(eq(userTable.email, dados.email)).first();
 
-    
+      if (!user) {
+        alert("Usuário não encontrado");
+        return;
+      }
 
-    const usuario = await db.select().from(userTable).where(
-      and(
-        eq(userTable.email, dados.email),
-        eq(userTable.senha, dados.senha)
-      )
+      // Verifica se a senha está correta
+      const senhaCorreta = await bcrypt.compare(dados.loginSenha, user.senha);
 
-    ).limit(1);
-    
-    if (usuario){
+      if (!senhaCorreta) {
+        alert("Senha incorreta");
+        return;
+      }
 
-    window.location.href = '/home';
-
-    localStorage.setItem('usuarioLogado', 'true');
-    
-    localStorage.setItem('usuarioId', usuario[0].id);
-    localStorage.setItem('usuarioNome', usuario[0].nome);
-    
-    console.log('Usuário logado com sucesso');
+      alert("Login bem-sucedido!");
+      // Aqui você pode redirecionar o usuário ou realizar outras ações após o login
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      alert("Erro ao fazer login");
     }
   }
   return (
