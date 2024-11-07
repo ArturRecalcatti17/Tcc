@@ -1,61 +1,54 @@
-import { useForm } from "react-hook-form"
-import { db } from "../db/config"
+import { useForm } from "react-hook-form";
+import { db } from "../db/config";
 import { userTable } from "../db/schema/schema";
-import { eq } from "drizzle-orm";
-import bcrypt from 'bcryptjs'; // Certifique-se de instalar esta biblioteca
-
+import { and, eq } from "drizzle-orm";
+import { useNavigate } from 'react-router-dom';
 
 export function UserLoginForm() {
+    const { register, handleSubmit } = useForm();
+    const navigate = useNavigate();
 
-  const {register, handleSubmit} = useForm()
+    async function handleAutLogin(dados) {
+        try {
+            const usuario = await db.select().from(userTable).where(
+                and(
+                    eq(userTable.cpf, dados.cpf),
+                    eq(userTable.senha, dados.senha)
+                )
+            ).limit(1);
 
-
-  async function handleAutLogin(dados) {
-    try {
-      // Consulta o banco de dados para encontrar o usuário pelo email
-      const user = await db.select().from(userTable).where(eq(userTable.email, dados.email)).first();
-
-      if (!user) {
-        alert("Usuário não encontrado");
-        return;
-      }
-
-      // Verifica se a senha está correta
-      const senhaCorreta = await bcrypt.compare(dados.loginSenha, user.senha);
-
-      if (!senhaCorreta) {
-        alert("Senha incorreta");
-        return;
-      }
-
-      alert("Login bem-sucedido!");
-      // Aqui você pode redirecionar o usuário ou realizar outras ações após o login
-    } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      alert("Erro ao fazer login");
+            if (usuario && usuario.length > 0) {
+                localStorage.setItem('usuarioLogado', 'true');
+                localStorage.setItem('usuarioId', usuario[0].id);
+                localStorage.setItem('usuarioNome', usuario[0].nome);
+                navigate('/dashboard');
+                console.log('Usuário logado com sucesso');
+            } else {
+                alert('CPF ou senha inválidos');
+            }
+        } catch (error) {
+            console.error('Erro ao fazer login:', error);
+            alert('Erro ao fazer login. Tente novamente.');
+        }
     }
-  }
-  return (
-    <div>
-      <form onSubmit={handleSubmit(handleAutLogin)}>
-        <input 
-          type="email" 
-          {...register('email', { 
-            required: "Email é obrigatório",
-          })} 
-          placeholder="Digite seu email"
-        />
-        <input 
-          type="password" 
-          {...register('loginSenha', { 
-            required: "Senha é obrigatória",
-          })} 
-          placeholder="Digite sua senha" 
-        />
-        <button type="submit">Entrar
-        </button>
-      </form>
-    </div>
-  )
-}
 
+    return (
+        <form onSubmit={handleSubmit(handleAutLogin)} className="login-form">
+            <div className="input-icon cpf-icon">
+                <input 
+                    type="text" 
+                    {...register('cpf', { required: "CPF é obrigatório" })} 
+                    placeholder="Digite seu CPF"
+                />
+            </div>
+            <div className="input-icon password-icon">
+                <input 
+                    type="password" 
+                    {...register('senha', { required: "Senha é obrigatória" })} 
+                    placeholder="Digite sua senha" 
+                />
+            </div>
+            <button type="submit">Entrar</button>
+        </form>
+    );
+}

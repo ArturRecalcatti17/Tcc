@@ -1,115 +1,219 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from "react-hook-form";
-import { db } from '../db/config';
-import { userTable } from '../db/schema/schema';
-import bcrypt from 'bcryptjs';
-import { eq } from 'drizzle-orm';
+import { useForm } from 'react-hook-form';
+import { db } from '../db/config'; // Ajuste o caminho conforme necessário
+import { userTable } from '../db/schema/schema'; // Ajuste o caminho conforme necessário
+import { useNavigate } from 'react-router-dom';
 
 export function UserCadastroForm() {
-  
-  const { register, handleSubmit, watch } = useForm();
-	const [estados, setEstados] = useState([]);
-	const [cidades, setCidades] = useState([]);
-	const estadoSelecionado = watch('estado');
-  
-  useEffect(() => {
-    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
-      .then(response => response.json())
-      .then(data => setEstados(data));
-  }, []);
+    const navigate = useNavigate();
+    const { register, handleSubmit, watch, reset } = useForm();
+    const [estados, setEstados] = useState([]);
+    const [cidades, setCidades] = useState([]);
+    const [estadoSelecionado, setEstadoSelecionado] = useState('');
 
-	useEffect(() => {
-		if (estadoSelecionado) {
-			fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSelecionado}/municipios`)
-				.then(response => response.json())
-				.then(data => setCidades(data));
-		}
-	}, [estadoSelecionado]);
+    useEffect(() => {
+        fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+            .then(response => response.json())
+            .then(data => {
+                const estadosOrdenados = data.sort((a, b) => a.nome.localeCompare(b.nome));
+                setEstados(estadosOrdenados);
+            });
+    }, []);
 
-	// Adicione esta função auxiliar no início do componente
-	function formatarCPF(cpf) {
-		cpf = cpf.replace(/\D/g, ''); // Remove caracteres não numéricos
-		return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-	}
+    // Atualizar cidades quando o estado mudar
+    const handleEstadoChange = (event) => {
+        const estadoId = event.target.value;
+        setEstadoSelecionado(estadoId);
+        
+        if (estadoId) {
+            fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoId}/municipios`)
+                .then(response => response.json())
+                .then(data => {
+                    const cidadesOrdenadas = data.sort((a, b) => a.nome.localeCompare(b.nome));
+                    setCidades(cidadesOrdenadas);
+                });
+        } else {
+            setCidades([]);
+        }
+    };
 
-	async function handleFormSubmit(dados) {
-		try {
-			// Verifica se o CPF já existe no banco de dados
-			async function verificarCpfExistente(cpf) {
-				const cpfExistente = await db.select().from(userTable).where(eq(userTable.cpf, formatarCPF(cpf))).first();
-				return cpfExistente;
-			}
+    function formatarCPF(value) {
+        // Remove tudo que não é número
+        value = value.replace(/\D/g, '');
+        
+        // Limita a 11 dígitos
+        value = value.slice(0, 11);
+        
+        // Adiciona a formatação
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        
+        return value;
+    }
 
-			const cpfExistente = await verificarCpfExistente(dados.cpf);
+    const handleCPFChange = (event) => {
+        const { value } = event.target;
+        const formattedValue = formatarCPF(value);
+        event.target.value = formattedValue;
+    };
 
-			if (cpfExistente) {
-				window.AbortControlleralert("CPF já cadastrado. Por favor, insira um CPF diferente.");
-				return;
-			}
+    async function handleFormSubmit(dados) {
+        try {
+            // Validação dos campos da data
+            const dia = parseInt(dados.diaNascimento);
+            const mes = parseInt(dados.mesNascimento);
+            const ano = parseInt(dados.anoNascimento);
 
-			const dataNascimento = new Date(
-				parseInt(dados.diaNascimento),
-				parseInt(dados.mesNascimento) - 1, 
-				parseInt(dados.anoNascimento),
-			);
+            // Validação básica dos valores
+            if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 1900) {
+                alert("Data de nascimento inválida");
+                return;
+            }
 
-			if (isNaN(dataNascimento.getTime())) {
-				throw new Error("Data de nascimento inválida");
-				}
-			const senhaEncriptada = await bcrypt.hash(dados.senha, 10);
+            // Validação de meses com 30 dias
+            if ([4, 6, 9, 11].includes(mes) && dia > 30) {
+                alert("Data inválida: este mês tem apenas 30 dias");
+                return;
+            }
 
-			const estadoSelecionado = estados.find(estado => estado.id === parseInt(dados.estado));
-			const cidadeSelecionada = cidades.find(cidade => cidade.id === parseInt(dados.cidade));
-			
+            // Validação especial para fevereiro
+            if (mes === 2) {
+                const ehBissexto = (ano % 4 === 0 && ano % 100 !== 0) || (ano % 400 === 0);
+                if ((ehBissexto && dia > 29) || (!ehBissexto && dia > 28)) {
+                    alert("Data inválida: fevereiro tem apenas 29 dias em anos bissextos");
+                    return;
+                }
+            }
 
-			await db.insert(userTable).values({
-				nome: dados.nome,
-				email: dados.email,
-				senha: senhaEncriptada,
-				cpf: formatarCPF(dados.cpf),
-				uf: estadoSelecionado ? estadoSelecionado.sigla : '',
-				cidade: cidadeSelecionada ? cidadeSelecionada.nome : '',
-				data_nasc: dataNascimento
-			});
-			console.log("Usuário cadastrado com sucesso:", dados);
-		} catch (error) {
-			console.error("Erro ao cadastrar usuário:", error);
-		}
-	}
+            const dataNascimento = new Date(
+                parseInt(dados.anoNascimento),
+                parseInt(dados.mesNascimento) - 1,  
+                parseInt(dados.diaNascimento)  
+            );
 
-	return (
-		<main>
-			<div>
-				<form onSubmit={handleSubmit(handleFormSubmit)}>
-					<input type="text" {...register('nome')} placeholder="Digite seu nome Completo" />
-					<input type="email" {...register('email')} placeholder="Digite seu e-mail" />
-					<input type="text" {...register('cpf')} placeholder="Digite seu CPF" />
-					<input type="password" {...register('senha')} placeholder="Digite sua senha" />
-					
-					<select {...register('estado')}>
-						<option value="">Selecione um estado</option>
-						{(estados).map(estado => (
-							<option key={estado.id} value={estado.id}>{estado.nome}</option>
-						))}
-					</select>
-					
-					<select {...register('cidade')}>
-						<option value="">Selecione uma cidade</option>
-						{(cidades).map(cidade => (
-							<option key={cidade.id} value={cidade.id}>{cidade.nome}</option>
-						))}
-					</select>
-					<div>
-						<label htmlFor="dataNascimento">Data de Nascimento:</label>
-						<input type="number" {...register('diaNascimento')} placeholder="Dia" min="1" max="31" />
-						<input type="number" {...register('mesNascimento')} placeholder="Mês" min="1" max="12" />
-						<input type="number" {...register('anoNascimento')} placeholder="Ano" min="1900" max={new Date().getFullYear()} />
-					</div>
+            if (isNaN(dataNascimento.getTime())) {
+                alert("Data de nascimento inválida");
+                return;
+            }
 
+            // Verificar idade mínima (por exemplo, 16 anos)
+            const hoje = new Date();
+            const idade = hoje.getFullYear() - dataNascimento.getFullYear();
+            if (idade < 16) {
+                alert("Você precisa ter pelo menos 16 anos para se cadastrar");
+                return;
+            }
 
-					<button type="submit">Cadastrar</button>
-				</form>
-			</div>
-		</main>
-	);
+            // Encontrar o estado e cidade selecionados
+            const estado = estados.find(e => e.id.toString() === dados.estado);
+            const cidade = cidades.find(c => c.id.toString() === dados.cidade);
+
+            await db.insert(userTable).values({
+                nome: dados.nome,
+                email: dados.email,
+                senha: dados.senha,
+                cpf: dados.cpf,
+                uf: estado?.sigla || '', // Salvando a sigla do estado
+                cidade: cidade?.nome || '', // Salvando o nome da cidade
+                data_nasc: dataNascimento
+            });
+
+            alert("Cadastro realizado com sucesso!");
+            reset();
+            navigate('/');
+            
+        } catch (error) {
+            console.error("Erro ao cadastrar usuário:", error);
+            alert("Erro ao realizar cadastro. Por favor, tente novamente.");
+        }
+    }
+
+    return (
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="cadastro-form">
+            <div className="input-icon user-icon">
+                <input 
+                    type="text" 
+                    {...register('nome')} 
+                    placeholder="Nome completo" 
+                />
+            </div>
+
+            <div className="input-icon email-icon">
+                <input 
+                    type="email" 
+                    {...register('email')} 
+                    placeholder="E-mail" 
+                />
+            </div>
+
+            <div className="input-icon cpf-icon">
+                <input 
+                    type="text" 
+                    {...register('cpf')} 
+                    placeholder="CPF"
+                    maxLength="14"
+                    onChange={handleCPFChange}
+                />
+            </div>
+
+            <select 
+                {...register('estado')} 
+                onChange={handleEstadoChange}
+            >
+                <option value="">Selecione o Estado</option>
+                {estados.map(estado => (
+                    <option key={estado.id} value={estado.id}>
+                        {estado.nome} - {estado.sigla}
+                    </option>
+                ))}
+            </select>
+
+            <select 
+                {...register('cidade')}
+                disabled={!estadoSelecionado}
+            >
+                <option value="">Selecione a Cidade</option>
+                {cidades.map(cidade => (
+                    <option key={cidade.id} value={cidade.id}>
+                        {cidade.nome}
+                    </option>
+                ))}
+            </select>
+
+            <div className="date-inputs">
+                <input 
+                    type="number" 
+                    {...register('diaNascimento')} 
+                    placeholder="Dia"
+                    min="1"
+                    max="31"
+                />
+
+                <input 
+                    type="number" 
+                    {...register('mesNascimento')} 
+                    placeholder="Mês"
+                    min="1"
+                    max="12"
+                />
+
+                <input 
+                    type="number" 
+                    {...register('anoNascimento')} 
+                    placeholder="Ano"
+                    min="1900"
+                    max={new Date().getFullYear()}
+                />
+            </div>
+
+            <div className="input-icon password-icon">
+                <input 
+                    type="password" 
+                    {...register('senha')} 
+                    placeholder="Senha" 
+                />
+            </div>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+    );
 }

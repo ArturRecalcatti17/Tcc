@@ -1,0 +1,76 @@
+.busca-politicos {
+  font-family: 'Arial', sans-serif;
+  background-color: #1a1a1a; /* Fundo escuro */
+  color: white; /* Texto branco */
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: auto; /* Centraliza o componente */
+}
+
+h1 {
+  text-align: center;
+  color: #00cc00; /* Verde */
+  margin-bottom: 20px;
+}
+
+.busca-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espaçamento entre os campos */
+}
+
+.input-busca {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.btn-buscar {
+  background-color: #00cc00; /* Verde */
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+.btn-buscar:hover {
+  background-color: #009900; /* Verde escuro */
+}
+
+.lista-politicos {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.politico-item {
+  background-color: #2C2C2C; /* Fundo mais claro */
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.politico-item img {
+  border-radius: 50%; /* Imagem redonda */
+}
+
+.btn-detalhes {
+  background-color: #007bff; /* Azul */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.btn-detalhes:hover {
+  background-color: #0056b3; /* Azul escuro */
+}
