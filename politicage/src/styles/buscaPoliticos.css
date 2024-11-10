@@ -5,7 +5,29 @@
   padding: 20px;
   border-radius: 8px;
   max-width: 800px;
-  margin: auto; /* Centraliza o componente */
+  margin: 20px auto; /* Centraliza o componente e adiciona margem superior */
+  position: relative; /* Para que o rodapé fique em relação a este elemento */
+  padding-bottom: 20px; /* Ajuste o espaço inferior */
+  margin-top: 150px; /* Aumenta o espaço acima para ficar mais perto do final da tela */
+}
+
+.lista-politicos {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+  max-height: 400px; /* Defina uma altura máxima */
+  overflow-y: auto; /* Adiciona rolagem vertical */
+}
+
+.rodape {
+  position: fixed; /* Fixa o rodapé */
+  bottom: 0; /* Coloca o rodapé na parte inferior */
+  left: 0;
+  right: 0;
+  background-color: var(--black-900); /* Cor do fundo do rodapé */
+  color: white; /* Cor do texto */
+  text-align: center; /* Centraliza o texto */
+  padding: 10px; /* Espaçamento interno */
 }
 
 h1 {
@@ -46,6 +68,8 @@ h1 {
   list-style: none;
   padding: 0;
   margin-top: 20px;
+  max-height: 400px; /* Defina uma altura máxima */
+  overflow-y: auto; /* Adiciona rolagem vertical */
 }
 
 .politico-item {

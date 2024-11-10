@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';  
+import axios from 'axios';
+import '../styles/detalhesPolitico.css';
 
 export function DetalhesPolitico() {
   const { id } = useParams();
@@ -26,21 +27,29 @@ export function DetalhesPolitico() {
 
       try {
         const proposicoesRes = await axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/proposicoes?ordem=ASC&ordenarPor=id`);
-        setProposicoes(proposicoesRes.data.dados.slice(0, 5));
+        if (proposicoesRes.data.dados) {
+          setProposicoes(proposicoesRes.data.dados.slice(0, 5));
+        } else {
+          setProposicoes([]);
+        }
       } catch (error) {
         console.error('Erro ao buscar proposições:', error);
         setProposicoes([]);
       }
 
       try {
-        const despesasRes = await axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/despesas?ordem=DESC&ordenarPor=ano`);
-        setDespesas(despesasRes.data.dados.slice(0, 5));
+        const despesasRes = await axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/despesas?ordem=DESC&ordenarPor=data`);
+        if (despesasRes.data.dados) {
+          setDespesas(despesasRes.data.dados.slice(0, 5));
+        } else {
+          setDespesas([]);
+        }
       } catch (error) {
         console.error('Erro ao buscar despesas:', error);
         setDespesas([]);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     fetchData();
@@ -53,9 +62,7 @@ export function DetalhesPolitico() {
   return (
     <div className="detalhes-politico">
       <button onClick={() => navigate(-1)} className="btn-voltar">Voltar</button>
-      
       <h1>{politico.nomeCivil}</h1>
-      
       <div className="info-basica">
         <img src={politico.ultimoStatus.urlFoto} alt={politico.nomeCivil} />
         <div>
@@ -78,7 +85,9 @@ export function DetalhesPolitico() {
         {proposicoes.length > 0 ? (
           <ul>
             {proposicoes.map(prop => (
-              <li key={prop.id}>{prop.siglaTipo} {prop.numero}/{prop.ano} - {prop.ementa.substring(0, 100)}...</li>
+              <li key={prop.id}>
+                {prop.siglaTipo} {prop.numero}/{prop.ano} - {prop.ementa.substring(0, 100)}...
+              </li>
             ))}
           </ul>
         ) : (

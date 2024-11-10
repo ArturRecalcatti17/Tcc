@@ -1,0 +1,19 @@
+.servicos {
+  font-family: 'Arial', sans-serif;
+  background-color: #1a1a1a; /* Fundo escuro */
+  color: white; /* Texto branco */
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 20px auto; /* Centraliza o componente */
+}
+
+h1 {
+  color: #00cc00; /* Verde */
+  text-align: center;
+}
+
+p {
+  margin-bottom: 15px;
+  line-height: 1.5; /* Aumenta o espaçamento entre linhas */
+}

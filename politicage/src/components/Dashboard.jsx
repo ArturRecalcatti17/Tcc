@@ -30,9 +30,10 @@ export function Dashboard() {
           projetosLei
         });
 
-        const ultimosProjetosNotificacoes = projetosResponse.data.dados.slice(0, 3).map(projeto => (
-          `Novo projeto de lei: ${projeto.ementa.substring(0, 50)}...`
-        ));
+        const ultimosProjetosNotificacoes = projetosResponse.data.dados.slice(0, 3).map(projeto => ({
+          id: projeto.id,
+          mensagem: `Novo projeto de lei: ${projeto.ementa.substring(0, 50)}...`
+        }));
         setNotificacoes(ultimosProjetosNotificacoes);
 
       } catch (error) {
@@ -69,15 +70,21 @@ export function Dashboard() {
         <h2>Deputados</h2>
         <div className="funcionalidades-grid">
           <Link to="/buscar-politicos" className="funcionalidade-item">Pesquisar</Link>
-          <Link to="/fonte" className="funcionalidade-item">Fonte</Link>
+          <a href="https://dadosabertos.camara.leg.br/" target="_blank" rel="noopener noreferrer" className="funcionalidade-item">Fonte</a>
         </div>
       </div>
       <div className="notificacoes">
         <h2>Notificações Recentes</h2>
         <ul>
-          {notificacoes.map((notificacao, index) => (
-            <li key={index}>{notificacao}</li>
-          ))}
+          {notificacoes.length > 0 ? (
+            notificacoes.map((notificacao) => (
+              <li key={notificacao.id}>
+                <Link to={`/projeto/${notificacao.id}`}>{notificacao.mensagem}</Link>
+              </li>
+            ))
+          ) : (
+            <p>Nenhuma notificação recente.</p>
+          )}
         </ul>
       </div>
     </div>

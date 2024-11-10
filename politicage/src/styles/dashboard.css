@@ -95,4 +95,35 @@ h2 {
   padding: 0;
 }
 
+.notificacoes {
+  background-color: #2C2C2C; /* Fundo mais claro */
+  color: #fff; /* Texto branco */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  margin-top: 40px;
+  flex-shrink: 0; /* Impede que a seção de notificações encolha */
+}
 
+.notificacoes h2 {
+  color: #00cc00; /* Verde */
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.notificacoes ul {
+  list-style: none; /* Remove marcadores da lista */
+  padding: 0;
+}
+
+.notificacoes li {
+  background-color: #1a1a1a; /* Fundo escuro para itens da lista */
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.notificacoes li:hover {
+  background-color: #00cc00; /* Verde ao passar o mouse */
+}
