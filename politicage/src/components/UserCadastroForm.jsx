@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { db } from '../db/config'; // Ajuste o caminho conforme necessário
 import { userTable } from '../db/schema/schema'; // Ajuste o caminho conforme necessário
 import { useNavigate } from 'react-router-dom';
+import '../styles/userCadastro.css'
 
 export function UserCadastroForm() {
     const navigate = useNavigate();
@@ -129,6 +130,7 @@ export function UserCadastroForm() {
 
     return (
         <form onSubmit={handleSubmit(handleFormSubmit)} className="cadastro-form">
+            <h2 className='cadastre-seaqui'>CADATRE-SE AQUI</h2>
             <div className="input-icon user-icon">
                 <input 
                     type="text" 
@@ -155,11 +157,21 @@ export function UserCadastroForm() {
                 />
             </div>
 
+            <div className="input-icon password-icon">
+                <input 
+                    type="password" 
+                    {...register('senha')} 
+                    placeholder="Senha" 
+                />
+            </div>
+
+            <div className="local_inputs">
+
             <select 
                 {...register('estado')} 
                 onChange={handleEstadoChange}
             >
-                <option value="">Selecione o Estado</option>
+                <option value="">UF</option>
                 {estados.map(estado => (
                     <option key={estado.id} value={estado.id}>
                         {estado.nome} - {estado.sigla}
@@ -171,7 +183,7 @@ export function UserCadastroForm() {
                 {...register('cidade')}
                 disabled={!estadoSelecionado}
             >
-                <option value="">Selecione a Cidade</option>
+                <option value="">Cidade</option>
                 {cidades.map(cidade => (
                     <option key={cidade.id} value={cidade.id}>
                         {cidade.nome}
@@ -179,7 +191,11 @@ export function UserCadastroForm() {
                 ))}
             </select>
 
+            </div>
+
+            <p className='legenda'>Data de Nascimento</p>
             <div className="date-inputs">
+
                 <input 
                     type="number" 
                     {...register('diaNascimento')} 
@@ -205,13 +221,7 @@ export function UserCadastroForm() {
                 />
             </div>
 
-            <div className="input-icon password-icon">
-                <input 
-                    type="password" 
-                    {...register('senha')} 
-                    placeholder="Senha" 
-                />
-            </div>
+
 
             <button type="submit">Cadastrar</button>
         </form>

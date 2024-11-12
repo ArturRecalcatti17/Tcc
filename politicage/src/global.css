@@ -20,6 +20,7 @@
   --black-900: #000000;
   --black-600: #1D1D1D; /* Corrigido de 'blac-600' para 'black-600' */
   --white-100: #FFFFFF;
+  --white-400: #83997F;
 }
 
 html, body {

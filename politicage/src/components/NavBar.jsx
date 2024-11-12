@@ -16,7 +16,7 @@ export function Navbar() {
                     <ul className="navbar-menu">
                         <li><Link to="/sobre-nos">Sobre Nós</Link></li>
                         <li><Link to="/servicos">Serviços</Link></li>
-                        <li><Link to="/buscar-politicos">Pesquisar</Link></li> {/* Renomeado para "Pesquisar" */}
+                        <li><Link to="/buscar-politicos">Pesquisar</Link></li>
                     </ul>
                 </div>
                 
@@ -25,6 +25,11 @@ export function Navbar() {
                         <li><Link to="/">Login</Link></li>
                     </ul>
                 </div>
+            </div>
+            <div className="underdots">
+                <div className='dot'></div>
+                <hr />
+                <div className='dot'></div>                
             </div>
         </nav>
     );

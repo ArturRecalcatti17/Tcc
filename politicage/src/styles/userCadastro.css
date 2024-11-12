@@ -1,0 +1,78 @@
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  justify-content: start;
+  align-items: center;
+  background-color: var(--green-300);
+  height: 750px;
+  width: 570px;
+  margin-top: -180px;
+  margin-left: 400px;
+  border-radius: 10px;
+}
+
+.cadastre-seaqui {
+
+margin-bottom: 40px;
+color: var(--grey-700);
+
+}
+
+input, select {
+  background-color: var(--gray-700);
+  width: 400px;
+  height: 45px;
+  border: none;
+  margin-bottom: 25px;
+  border-radius: 5px;
+  padding-left: 10px;
+  color: var(--white-400);
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+.date-inputs {
+  display: flex;
+  flex-direction: row;
+  width: 250px !important;
+  justify-content: center;
+  margin: 20px 0 20px 0;
+  text-align: start;
+}
+
+.legenda{
+  justify-content: start!important;
+  margin-top: 20px;
+  text-align: start;
+  margin-right: auto;
+  margin-left: 85px;
+}
+
+.date-inputs input {
+  margin: 0 10px 0 10px
+}
+
+.local_inputs, select {
+  min-width: 80px;
+  width: fit-content;
+  max-width: 300px;
+  margin: 0 10px 0 10px;
+  padding-right: 30px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L0 3h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  opacity: 1;
+}
+
+.local_inputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  max-width: 400px;
+  margin-left: 40px;
+
+}

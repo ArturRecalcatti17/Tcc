@@ -1,6 +1,5 @@
 import { UserLoginForm } from "./UserLoginForm";
 import { UserCadastroForm } from "./UserCadastroForm";
-import '../styles/logincadastro.css'
 
 export function ConjunctionForm() {
     return (
@@ -15,7 +14,7 @@ export function ConjunctionForm() {
             </div>
             
             <div className="right-panel">
-                <h2 className="criar-conta">CRIAR UMA CONTA</h2>
+                <h2 className="criar-conta">CADASTRE-SE AQUI</h2>
                 <UserCadastroForm />
             </div>
         </div>
