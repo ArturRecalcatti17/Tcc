@@ -39,13 +39,10 @@ export function UserCadastroForm() {
     };
 
     function formatarCPF(value) {
-        // Remove tudo que não é número
         value = value.replace(/\D/g, '');
         
-        // Limita a 11 dígitos
         value = value.slice(0, 11);
         
-        // Adiciona a formatação
         value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
         
         return value;
@@ -65,7 +62,7 @@ export function UserCadastroForm() {
             const ano = parseInt(dados.anoNascimento);
 
             // Validação básica dos valores
-            if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 1900) {
+            if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 1900 || ano > 2024) {
                 alert("Data de nascimento inválida");
                 return;
             }

@@ -1,10 +1,10 @@
 .container {
-  margin-top: 227px;
+  margin-top: 285px;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 90%;
+  min-height: 50%;
   width: 100%;
   gap: 30px;
-  padding: 20px;
 }
+
