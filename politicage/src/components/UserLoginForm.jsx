@@ -3,6 +3,7 @@ import { db } from "../db/config";
 import { userTable } from "../db/schema/schema";
 import { and, eq } from "drizzle-orm";
 import { useNavigate } from 'react-router-dom';
+import '../styles/userLogin.css'
 
 export function UserLoginForm() {
     const { register, handleSubmit } = useForm();
@@ -34,21 +35,39 @@ export function UserLoginForm() {
 
     return (
         <form onSubmit={handleSubmit(handleAutLogin)} className="login-form">
-            <div className="input-icon cpf-icon">
+            
+            <div>   
+            <h2>BEM-VINDO DE VOLTA!</h2>
+            </div>
+            
+
+            <div className="elemento">
+
+            <hr />
+            <h1>OU</h1>
+            <hr />
+            </div>
+
+            <div className="campos">
                 <input 
                     type="text" 
                     {...register('cpf', { required: "CPF é obrigatório" })} 
                     placeholder="Digite seu CPF"
+
                 />
-            </div>
-            <div className="input-icon password-icon">
                 <input 
                     type="password" 
                     {...register('senha', { required: "Senha é obrigatória" })} 
                     placeholder="Digite sua senha" 
                 />
+                <div className="legenda">
+                <p>Esqueceu sua senha? Clique aqui.</p>
             </div>
-            <button type="submit">Entrar</button>
+            </div>
+
+            
+
+            <button className="btnLogar"  type="submit">Entrar</button>
         </form>
     );
 }

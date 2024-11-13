@@ -1,0 +1,70 @@
+.login-form {
+  margin-top: 100px;
+  height: 200px;
+  width: 670px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}   
+
+.login-form h2 {
+  margin-top: -280px;
+}
+
+.elemento {
+  margin-top: -160px;
+  margin-bottom: 140px;
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+
+}
+
+.elemento hr {
+  height: 2px;
+  width: 170px;
+}
+
+.elemento h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.campos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.campos input{
+  height: 60px;
+  width: 500px;
+  border: 1px solid var(--green-300);
+  border-radius: 10px;
+}
+
+.campos .legenda {
+
+  text-decoration: underline;
+  width: 200px;
+  color: white;
+  text-align: center;
+  margin: auto;
+}
+
+.legenda p {
+  text-align: center;
+}
+
+button {
+  margin-top: 180px;
+  background-color: var(--green-700);
+  height: 30px;
+  padding: 20px 0 40px 0;
+  width: 400px;
+  color: var(--gray-700);
+  font-weight: bold;
+  border-radius: 10px;
+}

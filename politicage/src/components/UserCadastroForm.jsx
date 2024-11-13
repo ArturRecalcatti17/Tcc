@@ -134,24 +134,24 @@ export function UserCadastroForm() {
             <div className="input-icon user-icon">
                 <input 
                     type="text" 
-                    {...register('nome')} 
-                    placeholder="Nome completo" 
+                    {...register('nome', { required: true })} 
+                    placeholder="Nome completo*" 
                 />
             </div>
 
             <div className="input-icon email-icon">
                 <input 
                     type="email" 
-                    {...register('email')} 
-                    placeholder="E-mail" 
+                    {...register('email', { required: true })} 
+                    placeholder="E-mail*" 
                 />
             </div>
 
             <div className="input-icon cpf-icon">
                 <input 
                     type="text" 
-                    {...register('cpf')} 
-                    placeholder="CPF"
+                    {...register('cpf', { required: true })} 
+                    placeholder="CPF*"
                     maxLength="14"
                     onChange={handleCPFChange}
                 />
@@ -160,70 +160,71 @@ export function UserCadastroForm() {
             <div className="input-icon password-icon">
                 <input 
                     type="password" 
-                    {...register('senha')} 
-                    placeholder="Senha" 
+                    {...register('senha', { required: true })} 
+                    placeholder="Senha*" 
                 />
             </div>
 
             <div className="local_inputs">
+                <select 
+                    {...register('estado', { required: true })} 
+                    onChange={handleEstadoChange}
+                >
+                    <option value="">UF*</option>
+                    {estados.map(estado => (
+                        <option key={estado.id} value={estado.id}>
+                            {estado.nome} - {estado.sigla}
+                        </option>
+                    ))}
+                </select>
 
-            <select 
-                {...register('estado')} 
-                onChange={handleEstadoChange}
-            >
-                <option value="">UF</option>
-                {estados.map(estado => (
-                    <option key={estado.id} value={estado.id}>
-                        {estado.nome} - {estado.sigla}
-                    </option>
-                ))}
-            </select>
-
-            <select 
-                {...register('cidade')}
-                disabled={!estadoSelecionado}
-            >
-                <option value="">Cidade</option>
-                {cidades.map(cidade => (
-                    <option key={cidade.id} value={cidade.id}>
-                        {cidade.nome}
-                    </option>
-                ))}
-            </select>
-
+                <select className='cidade'
+                    {...register('cidade', { required: true })}
+                    disabled={!estadoSelecionado}
+                >
+                    <option value="">Cidade*</option>
+                    {cidades.map(cidade => (
+                        <option key={cidade.id} value={cidade.id}>
+                            {cidade.nome}
+                        </option>
+                    ))}
+                </select>
             </div>
 
-            <p className='legenda'>Data de Nascimento</p>
+            <p className='legenda'>Data de Nascimento:*</p>
             <div className="date-inputs">
-
                 <input 
                     type="number" 
-                    {...register('diaNascimento')} 
-                    placeholder="Dia"
+                    {...register('diaNascimento', { required: true })} 
+                    placeholder="Dia*"
                     min="1"
                     max="31"
                 />
 
                 <input 
                     type="number" 
-                    {...register('mesNascimento')} 
-                    placeholder="Mês"
+                    {...register('mesNascimento', { required: true })} 
+                    placeholder="Mês*"
                     min="1"
                     max="12"
                 />
 
                 <input 
                     type="number" 
-                    {...register('anoNascimento')} 
-                    placeholder="Ano"
+                    {...register('anoNascimento', { required: true })} 
+                    placeholder="Ano*"
                     min="1900"
                     max={new Date().getFullYear()}
                 />
             </div>
 
+            <div className="termos">
+                <p>As pessoas que usam nosso serviço podem ter carregado suas informações de contato no <br />Medium. <span>Saiba mais. </span></p>
+                <p>Ao clicar em Cadastre-se, você concorda com nossos <span> Termos</span>, <span>Política de Privacidade</span> e <span>Política  <br /> de Cookies</span>. Você poderá receber notificações por SMS e cancelar isso quando quiser.</p>
+            </div>
 
 
-            <button type="submit">Cadastrar</button>
+            <button className='btnCadastrar' type="submit">CADASTRE-SE</button>
         </form>
-    );
+);
 }
