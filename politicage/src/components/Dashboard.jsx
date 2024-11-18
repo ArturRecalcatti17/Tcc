@@ -1,92 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import '../styles/dashboard.css';
+import '../styles/dashboard.css'
+import logo from '../assets/logo.svg';
 
-export function Dashboard() {
-  const [estatisticas, setEstatisticas] = useState({
-    totalDeputados: 0,
-    partidosRepresentados: 0, 
-    projetosLei: 0
-  });
-  const [notificacoes, setNotificacoes] = useState([]);
-  const [usuario, setUsuario] = useState({ nome: 'Cidadão' });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const deputadosResponse = await axios.get('https://dadosabertos.camara.leg.br/api/v2/deputados');
-        const totalDeputados = deputadosResponse.data.dados.length;
-
-        const partidosResponse = await axios.get('https://dadosabertos.camara.leg.br/api/v2/partidos');
-        const partidosRepresentados = partidosResponse.data.dados.length;
-
-        const projetosResponse = await axios.get('https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=PL&ordem=DESC&ordenarPor=id&itens=100');
-        const projetosLei = projetosResponse.data.dados.length;
-
-        setEstatisticas({
-          totalDeputados,
-          partidosRepresentados,
-          projetosLei
-        });
-
-        const ultimosProjetosNotificacoes = projetosResponse.data.dados.slice(0, 3).map(projeto => ({
-          id: projeto.id,
-          mensagem: `Novo projeto de lei: ${projeto.ementa.substring(0, 50)}...`
-        }));
-        setNotificacoes(ultimosProjetosNotificacoes);
-
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+export function Dashboard(){
   return (
-    <div className="dashboard">
-      <div className="welcome-section">
-        <h1>Bem-vindo, {usuario.nome}</h1>
-      </div>
-      <div className="estatisticas-rapidas">
-        <h2>Estatísticas Rápidas</h2>
-        <div className="estatisticas-grid">
-          <div className="estatistica-item">
-            <h3>Total de Deputados</h3>
-            <p>{estatisticas.totalDeputados}</p>
+
+    <>
+    <section>
+      <div className="firstPanel">
+
+
+
+
+        <div className="leftCard">
+          <h1 className='tittle fl'>Seu Perfil</h1>
+
+          <a href=""><p>{(localStorage.getItem('usuarioNome') || usuario[0].nome).split(' ')[0]}</p></a>
+          <hr/>
+          <a href=""><p>Pesquisar</p></a>
+          <hr />
+          <a href="">Ultimo <br />Deputado</a>
+        </div>
+
+
+
+        <div className="rightCard">
+          <h1 className='tittle fr'>Bem-vindo cidadão</h1>
+          <div className="conjunto">
+
+          <p className='legenda'>O Politicagem é um trabalho de conclusão de 
+            curso criado pelos alunos Artur Bordignon e 
+            Davi Steiner. A nossa ideia é criar um site 
+            onde qualquer pessoa possa acessar e ter acesso 
+            aos dados e informações de deputados.
+          </p>
+          <div className="fotos">
+            <img src="" alt="" />
+            <img src="" alt="" />
           </div>
-          <div className="estatistica-item">
-            <h3>Partidos Representados</h3>
-            <p>{estatisticas.partidosRepresentados}</p>
           </div>
-          <div className="estatistica-item">
-            <h3>Projetos de Lei Recentes</h3>
-            <p>{estatisticas.projetosLei}</p>
-          </div>
+          <img className='logo' src={logo} alt="Politicage" />
         </div>
       </div>
-      <div className="funcionalidades-principais">
-        <h2>Deputados</h2>
-        <div className="funcionalidades-grid">
-          <Link to="/buscar-politicos" className="funcionalidade-item">Pesquisar</Link>
-          <a href="https://dadosabertos.camara.leg.br/" target="_blank" rel="noopener noreferrer" className="funcionalidade-item">Fonte</a>
+
+
+
+      <div className="secondPanel">
+        <div className="leftCard">
+          <h1 className='tittle sl'>Deputados</h1>
+        </div>
+        <div className="rightCard">
+          <h1 className='tittle'>Conheça o Deputado</h1>
         </div>
       </div>
-      <div className="notificacoes">
-        <h2>Notificações Recentes</h2>
-        <ul>
-          {notificacoes.length > 0 ? (
-            notificacoes.map((notificacao) => (
-              <li key={notificacao.id}>
-                <Link to={`/projeto/${notificacao.id}`}>{notificacao.mensagem}</Link>
-              </li>
-            ))
-          ) : (
-            <p>Nenhuma notificação recente.</p>
-          )}
-        </ul>
-      </div>
-    </div>
-  );
+    </section>
+
+    </>
+
+  );  
 }
