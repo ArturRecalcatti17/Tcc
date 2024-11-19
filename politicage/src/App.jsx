@@ -57,9 +57,7 @@ export function App() {
                     </ProtectedRoute>
                 } />
                 <Route path='/sobre-nos' element={
-                    <ProtectedRoute>
                         <SobreNos/>
-                    </ProtectedRoute>
                 } />
                 <Route path='/projeto/:id' element={
                     <ProtectedRoute>
@@ -67,9 +65,7 @@ export function App() {
                     </ProtectedRoute>
                 } />
                 <Route path='/servicos' element={
-                    <ProtectedRoute>
                         <Servicos/>
-                    </ProtectedRoute>
                 } />
             </Routes>
         </Router>

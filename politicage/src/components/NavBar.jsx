@@ -1,14 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import '../styles/navbar.css';
 import logo from '../assets/logo.svg';
 
 export function Navbar() {
+    const usuarioNome = localStorage.getItem('usuarioNome');
+    const isLoggedIn = localStorage.getItem('usuarioLogado') === 'true';
+
     return (
         <nav className="navbar">
             <div className="navbar-container">
                 <div className="navbar-left">
-                    <Link to="/" className="navbar-logo">
-                        <img src={logo} alt="PoliticAge" className="logo-img" />
+                    <Link to={isLoggedIn ? "/dashboard" : "/"} className="navbar-logo">
+                        <img src={logo} alt="Politicage" className="logo-img" />
                     </Link>
                 </div>
                 
@@ -22,7 +25,12 @@ export function Navbar() {
                 
                 <div className="navbar-right">
                     <ul className="navbar-menu">
-                        <li><Link to="/">Login</Link></li>
+                        {isLoggedIn && (
+                            <li className="user-welcome">
+                                <span>Bem-Vindo</span>
+                                <span className="user-name">{usuarioNome}</span>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>

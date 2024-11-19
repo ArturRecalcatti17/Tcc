@@ -47,7 +47,7 @@ section .secondPanel {
 
   height: 370px;
   width: 900px;
-  background-color: #309E3A;
+  background-color: #2E6533;
   margin-left: 30px;
   display: flex;
   align-items: start;
@@ -66,6 +66,7 @@ section .secondPanel {
   align-items: start;
   justify-content: start;
   text-align: start;
+  flex-direction: column;
 
 }
 
@@ -77,6 +78,7 @@ section .secondPanel {
   margin-left: 30px;
   display: flex;
   align-items: start;
+  flex-direction: column ;
   justify-content: start;
   text-align: start;
 
@@ -138,18 +140,96 @@ section .secondPanel {
   display: flex;
   flex-direction: row;
   width: 100%;
-  margin-left: -20px;
-
+  margin-left: -60px;
 }
 
 .fotos {
 
-  background-color: white;
+  flex-direction: row;
   height: 200px;
+  display: flex;
   width: 200px;
 }
 
 .fotos img {
 
+  height: 120px;
+  width: 120px;
+  border-radius: 10px;
+  background-color: aliceblue;
+}
   
+
+.artur {
+  margin-top: 40px;
+  margin-left: 10px;
+}
+
+.secondPanel .leftCard hr {
+  height: 2px !important;
+  width: 200px;
+  margin-left: 20px !important;
+  margin: 0;
+  background-color: #2E5741;
+  display: flex;
+  flex-direction: row;
+}
+
+.hr {
+  height: 2px !important;
+  width: 200px;
+  margin: 0;
+  margin-left: 20px !important;
+  background-color: #1C1C1C;
+  display: flex;
+  flex-direction: row;
+}
+
+.secondPanel a {
+
+  text-decoration: none;
+  font-size: 30px;
+  margin-left: 30px;
+  margin-top: 30px;
+  font-weight: bold;
+  color: white;
+
+}
+
+.secondPanel .rightCard a {
+  color: #9B9B9B !important;
+}
+
+.secondPanel .rightCard img {
+  display: flex;
+  height: 330px;
+  margin-left: 650px;
+  margin-top: -300px;
+}
+
+.secondPanel .rightCard hr {
+  height: 2px !important;
+  width: 200px;
+  margin: 0 0 10px 30px;
+  background-color: black;
+  border: none;
+  display: block;
+}
+
+.carregando {
+  margin: auto;
+  padding-bottom: 80px; 
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.secondPanel .link {
+
+  text-decoration: none;
+  font-size: 30px;
+  margin: 10px 0 10px 0;
+  margin-left: 30px;
+  font-weight: bold;
+  color: #9B9B9B
+
 }
