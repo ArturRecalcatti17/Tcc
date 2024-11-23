@@ -1,4 +1,4 @@
-import { integer, text, date, pgTable, uuid, pgEnum, decimal } from "drizzle-orm/pg-core";
+import { integer, text, date, pgTable, uuid, decimal } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable('usuario', {
   id: uuid("id").defaultRandom().notNull().primaryKey(),
@@ -6,8 +6,8 @@ export const userTable = pgTable('usuario', {
   data_nasc: date('data_nasc', { mode: 'date' }).notNull(),
   email: text('email', {length: 256}).notNull(),
   senha: text('senha').notNull(),
-  cpf: text('cpf').notNull(),
   uf: text('uf').notNull(),
+  cpf: text('cpf').notNull(),
   cidade: text('cidade', { length: 256 })
 });
 
@@ -41,3 +41,19 @@ export const consultaDespesas = pgTable('consulta_despesas', {
   mes: integer('mes').notNull(),
   valorLiquido: decimal('valor_liquido', { precision: 10, scale: 2 }).notNull()
 });
+
+export const comentario = pgTable('comentario', {
+  id: uuid("id").defaultRandom().notNull().primaryKey(),
+  id_politico: uuid("id_politico").notNull().references(() => politicosTable.id),
+  id_usuario: uuid("id_usuario").notNull().references(() => userTable.id),
+  comentario: text('comentario').notNull(),
+  data_criacao: date('data_criacao').notNull(),
+  data_alteracao: date('data_alteracao').notNull()
+})
+
+export const avaliacao = pgTable('avaliacao', {
+  id: uuid("id").defaultRandom().notNull().primaryKey(),
+  id_usuario: uuid("id_usuario").notNull().references(() => userTable.id),
+  id_politico: uuid("id_politico").notNull().references(() => politicosTable.id),
+  avaliacao: integer('avaliacao').notNull()
+})

@@ -1,0 +1,1 @@
+ALTER TABLE "usuario" ADD COLUMN "cpf" text NOT NULL;
