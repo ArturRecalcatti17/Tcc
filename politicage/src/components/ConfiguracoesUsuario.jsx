@@ -61,6 +61,9 @@ export function ConfiguracoesUsuario() {
     localStorage.removeItem('usuarioNome');
     localStorage.removeItem('authToken');
     localStorage.removeItem('usuario');
+
+    window.dispatchEvent(new Event('loginStatusChanged'));
+    
     navigate('/');
   };
 

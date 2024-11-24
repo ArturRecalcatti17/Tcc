@@ -18,56 +18,57 @@ function ProtectedRoute({ children }) {
     return isLoggedIn ? children : <Navigate to="/" />; // Redireciona para a página inicial se não estiver logado
 }
 
+// Componente de proteção para a rota de login/cadastro
+function LoginProtectedRoute({ children }) {
+    const isLoggedIn = localStorage.getItem('usuarioLogado') === 'true';
+    return isLoggedIn ? <Navigate to="/dashboard" /> : children;
+}
+
 export function App() {
     return (
         <Router>
-            <Navbar/> {}
+            <Navbar />
             <Routes>
-                <Route path='/' element={
+                <Route path="/" element={
+                    <LoginProtectedRoute>
                         <ConjunctionForm />
+                    </LoginProtectedRoute>
                 } />
-                <Route path='/dashboard' element={
+                <Route path="/dashboard" element={
                     <ProtectedRoute>
                         <Dashboard />
                     </ProtectedRoute>
                 } />
-                <Route path='/buscar-politicos' element={
+                <Route path="/buscar-politicos" element={
                     <ProtectedRoute>
                         <BuscaPoliticos />
                     </ProtectedRoute>
                 } />
-                <Route path='/politico/:id' element={
+                <Route path="/politico/:id" element={
                     <ProtectedRoute>
                         <DetalhesPolitico />
                     </ProtectedRoute>
                 } />
-                <Route path='/historico-consultas' element={
+                <Route path="/historico" element={
                     <ProtectedRoute>
                         <HistoricoConsultas />
                     </ProtectedRoute>
                 } />
-                <Route path='/monitorar-politico' element={
+                <Route path="/monitorar" element={
                     <ProtectedRoute>
                         <MonitorarPolitico />
                     </ProtectedRoute>
                 } />
-                <Route path='/configuracoes-usuario' element={
+                <Route path="/configuracoes-usuario" element={
                     <ProtectedRoute>
                         <ConfiguracoesUsuario />
                     </ProtectedRoute>
                 } />
-                <Route path='/sobre-nos' element={
-                        <SobreNos/>
-                } />
-                <Route path='/projeto/:id' element={
-                    <ProtectedRoute>
-                        <ProjetoLei/>
-                    </ProtectedRoute>
-                } />
-                <Route path='/servicos' element={
-                        <Servicos/>
-                } />
+                <Route path="/sobre-nos" element={<SobreNos />} />
+                <Route path="/servicos" element={<Servicos />} />
+                <Route path="/projeto-lei" element={<ProjetoLei />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Router>
     );
-} 
+}

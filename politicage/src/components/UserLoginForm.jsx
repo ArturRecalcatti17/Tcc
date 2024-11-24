@@ -41,6 +41,7 @@ export function UserLoginForm() {
                 localStorage.setItem('usuarioNome', usuario[0].nome);
                 localStorage.setItem('authToken', token);
                 navigate('/dashboard');
+                window.dispatchEvent(new Event('loginStatusChanged'));
                 console.log('Usuário logado com sucesso');
             } else {
                 alert('CPF ou senha inválidos');

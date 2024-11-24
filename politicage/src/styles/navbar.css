@@ -90,3 +90,8 @@ hr {
   margin: 15px 0;
 }
 
+.user-name, .spoon {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}

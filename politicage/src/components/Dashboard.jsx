@@ -2,14 +2,16 @@ import '../styles/dashboard.css'
 import logo from '../assets/logo.svg';
 import homemDeTerno from '../assets/homemDeTerno.png'
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export function Dashboard(){
   const [deputadoAleatorio, setDeputadoAleatorio] = useState(null);
+  const usuarioNome = localStorage.getItem('usuarioNome');
 
   useEffect(() => {
     const fetchDeputados = async () => {
       try {
-        const response = await fetch('https://cors-anywhere.herokuapp.com/https://dadosabertos.camara.leg.br/api/v2/deputados?ordem=ASC&ordenarPor=nome');
+        const response = await fetch('https://dadosabertos.camara.leg.br/api/v2/deputados?ordem=ASC&ordenarPor=nome');
         const data = await response.json();
         
         const deputados = data.dados;
@@ -31,56 +33,49 @@ export function Dashboard(){
   }, []);
 
   return (
-
     <>
     <section>
       <div className="firstPanel">
-
-
-
-
         <div className="leftCard">
           <h1 className='tittle fl'>Seu Perfil</h1>
-
-          <a href="/configuracoes-usuario"><p>{(localStorage.getItem('usuarioNome') || usuario[0].nome).split(' ')[0]}</p></a>
+          <Link to="/configuracoes-usuario">
+            <p>{usuarioNome?.split(' ')[0] || 'Usuário'}</p>
+          </Link>
           <hr/>
-          <a href="/buscar-politicos"><p>Pesquisar</p></a>
+          <Link to="/buscar-politicos"><p>Pesquisar</p></Link>
           <hr />
-          <a href="/ultimo-deputado">Ultimo <br />Deputado</a>
+          <Link to="/ultimo-deputado">Ultimo <br />Deputado</Link>
         </div>
-
-
 
         <div className="rightCard">
           <h1 className='tittle fr'>Bem-vindo cidadão</h1>
           <div className="conjunto">
-
-          <p className='legenda'>O Politicagem é um trabalho de conclusão de 
-            curso criado pelos alunos Artur Bordignon e 
-            Davi Steiner. A nossa ideia é criar um site 
-            onde qualquer pessoa possa acessar e ter acesso 
-            aos dados e informações de deputados.
-          </p>
-          <div className="fotos">
-            <img className='davi' src="" alt="" />
-            <img className='artur' src="" alt="" />
-          </div>
+            <p className='legenda'>O Politicagem é um trabalho de conclusão de 
+              curso criado pelos alunos Artur Bordignon e 
+              Davi Steiner. A nossa ideia é criar um site 
+              onde qualquer pessoa possa acessar e ter acesso 
+              aos dados e informações de deputados.
+            </p>
+            <div className="fotos">
+              <img className='davi' src="" alt="" />
+              <img className='artur' src="" alt="" />
+            </div>
           </div>
           <img className='logo' src={logo} alt="Politicage" />
         </div>
       </div>
 
-
-
       <div className="secondPanel">
-        
         <div className="leftCard">
           <h1 className='tittle sl'>Deputados</h1>
-          <a href=""><p>Pesquisar</p></a>
+          <Link to="/buscar-politicos"><p>Pesquisar</p></Link>
           <hr />
-          <a href="">Ultimo <br />Deputado</a>
+          <a href="https://dadosabertos.camara.leg.br/api/v2/deputados" 
+             target="_blank" 
+             rel="noopener noreferrer">
+            Fonte
+          </a>
         </div>
-
 
         <div className="rightCard">
           <h1 className='tittle'>Conheça o Deputado</h1>
@@ -90,18 +85,15 @@ export function Dashboard(){
               <hr />
               <p className='link'>{deputadoAleatorio.estado}</p>
               <hr />
-              <a href={`/politico/${deputadoAleatorio.id}`}><p>Histórico</p></a> 
+              <Link to={`/politico/${deputadoAleatorio.id}`}><p>Histórico</p></Link>
             </>
           ) : (
             <p className='carregando'>Carregando dados do deputado...</p>
           )}
           <img src={homemDeTerno} alt="homemDeTerno" />
         </div>
-
       </div>
     </section>
-
     </>
-
   );  
 }
