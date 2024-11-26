@@ -6,11 +6,11 @@
   align-items: center;
   height: 300px;
   font-family: 'Montserrat', sans-serif;
-  color: white; /* Texto branco */
+  color: white;
   padding: 40px;
   max-width: 800px;
-  margin: 100px auto; /* Centraliza o componente e adiciona margem superior */
-  text-align: center; /* Centraliza o texto */
+  margin: 100px auto; 
+  text-align: center;
 }
 
 h1 {
@@ -27,18 +27,18 @@ p {
 }
 
 .btn-voltar {
-  background-color: #00cc00; /* Verde */
+  background-color: #00cc00;
   color: var(--gray-700);
   padding: 12px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  text-decoration: none; /* Remove o sublinhado */
+  text-decoration: none; 
   font-size: 18px;
   transition: background-color 0.3s;
-  margin-top: 20px; /* Adiciona margem superior para mover o botão para baixo */
+  margin-top: 20px; 
 }
 
 .btn-voltar:hover {
-  background-color: #009900; /* Verde escuro */
+  background-color: #009900; 
 }

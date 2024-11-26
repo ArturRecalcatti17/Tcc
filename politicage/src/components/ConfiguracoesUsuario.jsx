@@ -1,181 +1,285 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../db/config';
+import { userTable, avaliacao, comentario } from '../db/schema/schema';
+import { eq } from 'drizzle-orm';
 import '../styles/configuracoesUsuario.css';
 
 export function ConfiguracoesUsuario() {
   const navigate = useNavigate();
-  const [usuario, setUsuario] = useState({
+  const [formData, setFormData] = useState({
     nome: '',
     email: '',
     senha: '',
     estado: '',
-    cidade: '',
+    cidade: ''
   });
-  
-  const [notificacoes, setNotificacoes] = useState({
-    emailNotificacoes: false,
-    smsNotificacoes: false,
-  });
-  
-  const [loading, setLoading] = useState(false);
+
+  const [ufs, setUfs] = useState([]);
+  const [cidades, setCidades] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const usuarioSalvo = JSON.parse(localStorage.getItem('usuario'));
-    if (usuarioSalvo) {
-      setUsuario(usuarioSalvo);
-    }
+    const fetchUserData = async () => {
+      try {
+        const userId = localStorage.getItem('usuarioId');
+        
+        if (!userId) {
+          throw new Error('Usuário não encontrado');
+        }
+
+        const userData = await db.select({
+          nome: userTable.nome,
+          email: userTable.email,
+          senha: userTable.senha,
+          uf: userTable.uf,
+          cidade: userTable.cidade
+        })
+        .from(userTable)
+        .where(eq(userTable.id, userId))
+        .limit(1);
+
+        if (userData && userData[0]) {
+          setFormData({
+            nome: userData[0].nome || '',
+            email: userData[0].email || '',
+            senha: userData[0].senha || '',
+            estado: userData[0].uf || '',
+            cidade: userData[0].cidade || ''
+          });
+        }
+        setLoading(false);
+      } catch (err) {
+        setError('Erro ao carregar dados do usuário');
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, []);
+
+  useEffect(() => {
+    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome')
+      .then(response => response.json())
+      .then(data => {
+        setUfs(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        setError('Erro ao carregar estados');
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (formData.estado) {
+      setLoading(true);
+      setCidades([]); // Limpar cidades anteriores
+      fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${formData.estado}/municipios`)
+        .then(response => response.json())
+        .then(data => {
+          setCidades(data);
+          setLoading(false);
+        })
+        .catch(error => {
+          setError('Erro ao carregar cidades');
+          setLoading(false);
+        });
+    } else {
+      setCidades([]);
+    }
+  }, [formData.estado]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUsuario({ ...usuario, [name]: value });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'estado' ? { cidade: '' } : {})
+    }));
   };
 
-  const handleNotificacoesChange = (e) => {
-    const { name, checked } = e.target;
-    setNotificacoes({ ...notificacoes, [name]: checked });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-      localStorage.setItem('usuarioNome', usuario.nome);
-      setTimeout(() => {
-        setLoading(false);
-        alert('Informações atualizadas com sucesso!');
-      }, 1000);
-    } catch (error) {
-      setError('Erro ao atualizar informações');
+      const userId = localStorage.getItem('usuarioId');
+      
+      if (!userId) {
+        throw new Error('Usuário não encontrado');
+      }
+
+      // Atualizar dados no banco
+      await db.update(userTable)
+        .set({
+          nome: formData.nome,
+          email: formData.email,
+          senha: formData.senha,
+          uf: formData.estado,
+          cidade: formData.cidade
+        })
+        .where(eq(userTable.id, userId));
+
       setLoading(false);
+      alert('Alterações salvas com sucesso!');
+    } catch (err) {
+      setError('Erro ao salvar alterações. Por favor, tente novamente.');
+      setLoading(false);
+      console.error('Erro ao atualizar:', err);
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmar = window.confirm('Tem certeza que deseja deletar sua conta? Esta ação não pode ser desfeita.');
+    
+    if (confirmar) {
+      try {
+        setLoading(true);
+        const userId = localStorage.getItem('usuarioId');
+        
+        if (!userId) {
+          throw new Error('Usuário não encontrado');
+        }
+
+        // Primeiro, deletar registros relacionados (avaliações e comentários)
+        await db.delete(avaliacao)
+          .where(eq(avaliacao.id_usuario, userId));
+
+        await db.delete(comentario)
+          .where(eq(comentario.id_usuario, userId));
+
+        // Por fim, deletar o usuário
+        await db.delete(userTable)
+          .where(eq(userTable.id, userId));
+
+        // Limpar localStorage e redirecionar
+        localStorage.clear();
+        navigate('/');
+        
+      } catch (error) {
+        setError('Erro ao deletar conta. Por favor, tente novamente.');
+        console.error('Erro ao deletar conta:', error);
+        setLoading(false);
+      }
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('usuarioLogado');
-    localStorage.removeItem('usuarioId');
-    localStorage.removeItem('usuarioNome');
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('usuario');
-
-    window.dispatchEvent(new Event('loginStatusChanged'));
-    
+    localStorage.clear();
     navigate('/');
   };
 
-  const handleDelete = () => {
-    const confirmar = window.confirm('Tem certeza que deseja deletar sua conta?');
-    if (confirmar) {
-      localStorage.clear();
-      navigate('/');
-    }
-  };
+  if (loading) {
+    return <div className="loading">Carregando...</div>;
+  }
 
   return (
-    <div className="configuracoes-usuario">
-      <h1>{usuario.nome}</h1>
-      {loading && <div className="loading">Carregando...</div>}
-      {error && <div className="error">{error}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">E-mail:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={usuario.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="senha">Senha:</label>
-          <input
-            type="password"
-            id="senha"
-            name="senha"
-            value={usuario.senha}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="estado">Estado:</label>
-          <input
-            type="text"
-            id="estado"
-            name="estado"
-            value={usuario.estado}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="cidade">Cidade:</label>
-          <input
-            type="text"
-            id="cidade"
-            name="cidade"
-            value={usuario.cidade}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="notificacoes-section">
-          <h2>Preferências de Notificação</h2>
-          <div className="checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                name="emailNotificacoes"
-                checked={notificacoes.emailNotificacoes}
-                onChange={handleNotificacoesChange}
-              />
-              Receber notificações por e-mail
-            </label>
+    <section className="configuracoes-section">
+      <div className="configuracoes-container">
+        <h1>Configurações da Conta</h1>
+        
+        {error && <div className="error-message">{error}</div>}
+        
+        <form onSubmit={handleSubmit} className="configuracoes-form">
+          <div className="form-group">
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              value={formData.nome}
+              onChange={handleChange}
+              required
+              placeholder="Nome"
+            />
           </div>
-          <div className="checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                name="smsNotificacoes"
-                checked={notificacoes.smsNotificacoes}
-                onChange={handleNotificacoesChange}
-              />
-              Receber notificações por SMS
-            </label>
-          </div>
-        </div>
 
-        <div className="botoes-container">
-          <button type="submit" className="btn-alterar">
-            Alterar
-          </button>
-          <button 
-            type="button" 
-            className="btn-deletar"
-            onClick={handleDelete}
-          >
-            Deletar
-          </button>
-          <button 
-            type="button" 
-            className="btn-sair"
-            onClick={handleLogout}
-          >
-            Sair
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="form-group">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="Email"
+            />
+          </div>
+
+          <div className="form-group">
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              value={formData.senha}
+              onChange={handleChange}
+              required
+              placeholder="Senha"
+            />
+          </div>
+
+          <div className="localizacao-group">
+            <div className="form-group">
+              <select
+                id="estado"
+                name="estado"
+                value={formData.estado}
+                onChange={handleChange}
+                required
+                style={{ zIndex: 2 }}
+              >
+                <option value="">Selecione um estado</option>
+                {ufs.map(uf => (
+                  <option key={uf.id} value={uf.sigla}>
+                    {uf.nome} - {uf.sigla}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <select
+                id="cidade"
+                name="cidade"
+                value={formData.cidade}
+                onChange={handleChange}
+                required
+                style={{ zIndex: 2, pointerEvents: 'auto' }}
+              >
+                <option value="">Selecione uma cidade</option>
+                {cidades.map(cidade => (
+                  <option key={cidade.id} value={cidade.nome}>
+                    {cidade.nome}
+                  </option>
+                ))}
+              </select>
+            </div>  
+          </div>
+
+          <div className="botoes-container">
+            <button type="submit" className="btn-confirmar">
+              Alterar
+            </button>
+            <button 
+              type="button" 
+              className="btn-deletar"
+              onClick={handleDelete}
+              disabled={loading}
+            >
+              {loading ? 'Deletando...' : 'Deletar Conta'}
+            </button>
+            <button 
+              type="button" 
+              className="btn-sair"
+              onClick={handleLogout}
+            >
+              Sair
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   );
 }

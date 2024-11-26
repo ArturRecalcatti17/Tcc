@@ -30,7 +30,7 @@ export function HistoricoConsultas() {
   const adicionarConsulta = async (novaConsulta) => {
     try {
       const response = await axios.post('http://localhost:3333/api/consultas', novaConsulta);
-      setConsultas([...consultas, response.data]); // Atualiza o estado com a nova consulta
+      setConsultas([...consultas, response.data]);
     } catch (err) {
       console.error('Erro ao adicionar consulta:', err);
     }

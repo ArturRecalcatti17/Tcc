@@ -6,19 +6,17 @@ import { BuscaPoliticos } from './components/BuscaPolitico';
 import { DetalhesPolitico } from './components/DetalhesPolitico';
 import { HistoricoConsultas } from './components/HistoricoConsultas';
 import { MonitorarPolitico } from './components/MonitorarPolitico';
-import { ConfiguracoesUsuario } from './components/ConfiguracoesUsuario'; // Importando ConfiguracoesUsuario
+import { ConfiguracoesUsuario } from './components/ConfiguracoesUsuario';
 import {SobreNos} from './components/sobreNos';
 import {ProjetoLei} from './components/Projetolei'
 import {Servicos} from './components/Servicos'
 import {Navbar} from './components/NavBar'
 
-// Componente de proteção de rota
 function ProtectedRoute({ children }) {
     const isLoggedIn = localStorage.getItem('usuarioLogado') === 'true';
-    return isLoggedIn ? children : <Navigate to="/" />; // Redireciona para a página inicial se não estiver logado
+    return isLoggedIn ? children : <Navigate to="/" />; 
 }
 
-// Componente de proteção para a rota de login/cadastro
 function LoginProtectedRoute({ children }) {
     const isLoggedIn = localStorage.getItem('usuarioLogado') === 'true';
     return isLoggedIn ? <Navigate to="/dashboard" /> : children;

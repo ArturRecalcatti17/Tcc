@@ -19,18 +19,18 @@
   --green-700: #34CB79;
   --yellow-500: #EEC424;
   --black-900: #000000;
-  --black-600: #1D1D1D; /* Corrigido de 'blac-600' para 'black-600' */
+  --black-600: #1D1D1D; 
   --white-100: #FFFFFF;
   --white-400: #83997F;
 }
 
 html, body {
-  height: 100%; /* Alterado para 100% para permitir que o body se expanda */
+  height: 100%; 
   width: 100%;
   background-color: var(--gray-700);
 }
 
 body {
-  display: flex; /* Adicionado para garantir que o body use flexbox se necessário */
-  flex-direction: column; /* Alinha os elementos verticalmente */
+  display: flex; 
+  flex-direction: column;
 }

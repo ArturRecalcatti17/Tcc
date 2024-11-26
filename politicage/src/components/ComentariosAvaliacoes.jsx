@@ -36,7 +36,6 @@ export function ComentariosAvaliacoes({ idPolitico }) {
     try {
       await axios.post(`/api/comentarios`, { idPolitico, comentario: novoComentario });
       setNovoComentario('');
-      // Recarregar comentários
     } catch (error) {
       setError('Erro ao adicionar comentário.');
     }
@@ -47,7 +46,6 @@ export function ComentariosAvaliacoes({ idPolitico }) {
     try {
       await axios.post(`/api/avaliacoes`, { idPolitico, avaliacao: novaAvaliacao });
       setNovaAvaliacao(0);
-      // Recarregar avaliações
     } catch (error) {
       setError('Erro ao adicionar avaliação.');
     }

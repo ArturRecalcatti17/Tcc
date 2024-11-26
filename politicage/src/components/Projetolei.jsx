@@ -33,7 +33,6 @@ export function ProjetoLei() {
       <h1>{projeto.ementa}</h1>
       <p><strong>Data de Apresentação:</strong> {new Date(projeto.dataApresentacao).toLocaleDateString()}</p>
       <p><strong>Autor:</strong> {projeto.autor}</p>
-      {/* Adicione mais detalhes conforme necessário */}
     </div>
   );
 }

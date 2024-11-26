@@ -26,7 +26,7 @@ export function DetalhesPolitico() {
       }
 
       try {
-        const proposicoesRes = await axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/proposicoes?ordem=ASC&ordenarPor=id`);
+        const proposicoesRes = await axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/proposicoes`);
         if (proposicoesRes.data.dados) {
           setProposicoes(proposicoesRes.data.dados.slice(0, 5));
         } else {
@@ -38,9 +38,9 @@ export function DetalhesPolitico() {
       }
 
       try {
-        const despesasRes = await axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/despesas?ordem=DESC&ordenarPor=data`);
+        const despesasRes = await axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/despesas?ordem=DESC&ordenarPor=ano`);
         if (despesasRes.data.dados) {
-          setDespesas(despesasRes.data.dados.slice(0, 5));
+          setDespesas(despesasRes.data.dados.slice());
         } else {
           setDespesas([]);
         }
