@@ -1,11 +1,12 @@
 .servicos {
+
   font-family: 'Arial', sans-serif;
   background-color: #1a1a1a; 
   color: white;
   padding: 20px;
   border-radius: 8px;
   max-width: 800px;
-  margin: 20px auto;
+  margin: 200px auto;
 }
 
 h1 {

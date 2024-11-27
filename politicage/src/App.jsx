@@ -45,11 +45,6 @@ export function App() {
                         <DetalhesPolitico />
                     </ProtectedRoute>
                 } />
-                <Route path="/historico" element={
-                    <ProtectedRoute>
-                        <HistoricoConsultas />
-                    </ProtectedRoute>
-                } />
                 <Route path="/configuracoes-usuario" element={
                     <ProtectedRoute>
                         <ConfiguracoesUsuario />

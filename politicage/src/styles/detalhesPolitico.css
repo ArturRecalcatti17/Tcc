@@ -1,125 +1,202 @@
+html {
+  scroll-behavior: smooth;
+}
+
 .detalhes-politico {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  color: #fff;
+  height: 100%;
+  width: 100%;
+  margin-top: 00px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  scroll-behavior: smooth;
 }
 
-.btn-voltar {
-  margin-bottom: 20px;
-  padding: 10px 20px;
-  background-color: #235D33;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-}
-
-.identidade-representacao,
-.atuacao-legislativa,
-.gastos-publicos,
-.presenca-votacoes,
-.comentarios-avaliacoes {
-  background-color: #2a2a2a;
-  padding: 20px;
-  border-radius: 8px;
+.navbarD {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 30px;
   margin-bottom: 30px;
+  
 }
 
-h2 {
-  margin-bottom: 20px;
-  color: #4CAF50;
+.navbarD ul {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  position: fixed;
+  margin-right: 600px;
+  
+
 }
 
-h3 {
-  color: #fff;
-  margin: 15px 0;
-  font-size: 1.2em;
+.navbarD ul li {
+  font-size: 20px;
+  font-weight: 400;
+  list-style: none;
+}
+
+.navbarD ul li:hover {
+  background-color: rgb(63, 63, 63);
+  transition: 0.3s;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 400;
+  list-style: none;
 }
 
 .info-basica {
   display: flex;
-  gap: 30px;
-  align-items: flex-start;
+  width: 60% ;
+  height: 400px;
+  justify-content: center;
+  gap: 70px;
 }
 
-.foto-politico {
-  width: 200px;
+.imgDep {
+  margin: auto 0 auto 0;
+  height: 220px;
+  width: 170px;
+  border-radius: 20px;
+  justify-content: center;
+  background-color: var(--green-500);
+  display: flex;
+}
+.imgDep img {
+  height: 200px;
+  border-radius: 10px;
+  align-self: center;
+}
+
+.underImg {
+  align-self: center; 
+}
+
+.underImg strong {
+  color: gray;
+  font-size: 20px;
+}
+
+.underImg p {
+  font-size: 20px;
+  color: white;
+}
+
+.Despesas {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  width: auto;
   height: auto;
-  border-radius: 8px;
-  flex-shrink: 0;
 }
 
-.info-container {
-  flex: 1;
-}
-
-.info-container p {
-  margin: 10px 0;
-  line-height: 1.5;
-}
-
-.atuacao-legislativa .proposicoes,
-.atuacao-legislativa .comissoes {
-  margin-top: 20px;
-}
-
-.proposicoes ul,
-.comissoes ul,
-.frequencia ul,
-.votacoes ul {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 15px;
-}
-
-.proposicoes li,
-.comissoes li,
-.frequencia li,
-.votacoes li {
-  background-color: #333;
-  padding: 15px;
-  border-radius: 5px;
-}
-
-.despesas-container {
-  overflow-x: auto;
-  margin-top: 15px;
-}
-
-table {
-  width: 100%;
-  min-width: 800px;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-th, td {
-  padding: 12px;
-  text-align: left;
+.Despesas th, .Despesas td {
+  color: white;
   border-bottom: 1px solid #444;
+  text-align: left;
+  padding: 12px;
 }
 
-.presenca-votacoes .grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+.Despesas th {
+
+  background-color: #333;
+}
+.Despesas td {
+  background-color: #3a3a3a;
+}
+
+.Eventos {
+  display: flex;
+  flex-direction: column;
+  background-color: #3a3a3a;
+  height: auto;
+  width: 1300px;
   margin-top: 20px;
 }
 
-@media (max-width: 768px) {
-  .info-basica {
-    flex-direction: column;
-  }
+.Eventos h1 {
+  font-size: 40px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+}
+
+ .eventos{
+  width: calc(1300px - 200px);
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  background-color: aliceblue;
+  border-radius: 10px;
+  padding: 100px;
+  margin-top: 10px;
+  margin-bottom: 60px;
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 1);
+} 
+
+.eventos li {
+  margin-bottom: 40px;
+}
+
+.eventos h3 {
+  margin-bottom: 10px;
+}
+
+.eventos li {
+  border-bottom: 2px solid black;
+}
+
+.Ocupacoes {
+  display: flex;
+  flex-direction: column;
+  background-color: #3a3a3a;
+  height: auto;
+  width: 1300px;
+  margin-top: 20px;
+}
+
+.Ocupacoes h1 {
+  font-size: 40px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+}
+
+ .ocupacoes{
+  width: calc(1300px - 200px);
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  background-color: aliceblue;
+  border-radius: 10px;
+  padding: 100px;
+  margin-top: 10px;
+  margin-bottom: 60px;
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 1);
+} 
+
+.ocupacoes li {
+  margin-bottom: 40px;
+}
+
+.ocupacoes h3 {
+  margin-bottom: 10px;
+  width: 400px;
+}
+
+.ocupacoes li {
+  border-bottom: 2px solid black;
+}
+
+.btn-voltar {
   
-  .foto-politico {
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto 20px;
-  }
-  
-  .grid-container {
-    grid-template-columns: 1fr;
-  }
+  height: 60px;
+  margin-bottom: -20px;
+}
+
+.navbarD a {
+  color: white;
+  text-decoration: none;
+
 }
