@@ -36,6 +36,7 @@
     background-color: #242424;
     border-radius: 0;
     display: flex;
+    margin-top: 30px;
     flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;  
@@ -98,12 +99,12 @@ h3 {
 .imgbanner {
   background-color: #235D33;
   height: 500px;
-  margin-top: -10px;
+  margin-top: 0px;
   width: 200px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-right: -9px;
+  margin-right: 0px;
 }
 
 .imgbanner .img {

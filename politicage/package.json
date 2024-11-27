@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "https://dadosabertos.camara.leg.br",
+  
   "scripts": {
     "migrate": "drizzle-kit push",
     "dev": "vite",

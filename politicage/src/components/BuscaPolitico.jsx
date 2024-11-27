@@ -7,7 +7,7 @@ import local from '../assets/local.svg'
 import despesas from '../assets/despesas.svg'
 import doublePersons from '../assets/doublePersons.svg'
 import handPart from '../assets/handPart.svg'
-import { api, fetchDeputado, fetchDadosComplementares } from '../utils/api';
+import { api } from '../utils/api';
 
 export function BuscaPoliticos() {
   const [politicos, setPoliticos] = useState([]);
@@ -93,7 +93,7 @@ export function BuscaPoliticos() {
       ) : (
         <div className="listas-container">
           <ul className="lista-politicos">
-            {politicos.slice(0, Math.ceil(politicos.length / 2)).map((politico) => (
+            {politicos.slice(0, 20).map((politico) => (
               <li key={politico.id} className="politico-item">
                 <div className="imgbanner">
                   <img src={politico.urlFoto} alt={politico.nome} className='img' width="150" height="150" />
@@ -120,7 +120,7 @@ export function BuscaPoliticos() {
             ))}
           </ul>
           <ul className="lista-politicos">
-            {politicos.slice(Math.ceil(politicos.length / 2)).map((politico) => (
+            {politicos.slice(20, 40).map((politico) => (
               <li key={politico.id} className="politico-item">
                 <div className="imgbanner">
                   <img src={politico.urlFoto} alt={politico.nome} className='img' width="150" height="150" />

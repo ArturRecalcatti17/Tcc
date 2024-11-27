@@ -3,6 +3,7 @@ import logo from '../assets/logo.svg';
 import homemDeTerno from '../assets/homemDeTerno.png'
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { api } from '../utils/api';
 
 export function Dashboard() {
   const [deputadoAleatorio, setDeputadoAleatorio] = useState(null);
@@ -11,10 +12,9 @@ export function Dashboard() {
   useEffect(() => {
     const fetchDeputados = async () => {
       try {
-        const response = await fetch('https://dadosabertos.camara.leg.br/api/v2/deputados?ordem=ASC&ordenarPor=nome');
-        const data = await response.json();
+        const response = await api.get('/deputados?ordem=ASC&ordenarPor=nome');
+        const deputados = response.data.dados;
 
-        const deputados = data.dados;
         const randomIndex = Math.floor(Math.random() * deputados.length);
         const deputado = deputados[randomIndex];
 
