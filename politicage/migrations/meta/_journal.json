@@ -71,6 +71,13 @@
       "when": 1732399136229,
       "tag": "0009_real_captain_flint",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1732646235143,
+      "tag": "0010_flawless_steel_serpent",
+      "breakpoints": true
     }
   ]
 }

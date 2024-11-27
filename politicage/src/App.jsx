@@ -5,10 +5,8 @@ import { Dashboard } from './components/Dashboard';
 import { BuscaPoliticos } from './components/BuscaPolitico';
 import { DetalhesPolitico } from './components/DetalhesPolitico';
 import { HistoricoConsultas } from './components/HistoricoConsultas';
-import { MonitorarPolitico } from './components/MonitorarPolitico';
 import { ConfiguracoesUsuario } from './components/ConfiguracoesUsuario';
 import {SobreNos} from './components/sobreNos';
-import {ProjetoLei} from './components/Projetolei'
 import {Servicos} from './components/Servicos'
 import {Navbar} from './components/NavBar'
 
@@ -52,11 +50,6 @@ export function App() {
                         <HistoricoConsultas />
                     </ProtectedRoute>
                 } />
-                <Route path="/monitorar" element={
-                    <ProtectedRoute>
-                        <MonitorarPolitico />
-                    </ProtectedRoute>
-                } />
                 <Route path="/configuracoes-usuario" element={
                     <ProtectedRoute>
                         <ConfiguracoesUsuario />
@@ -64,7 +57,6 @@ export function App() {
                 } />
                 <Route path="/sobre-nos" element={<SobreNos />} />
                 <Route path="/servicos" element={<Servicos />} />
-                <Route path="/projeto-lei" element={<ProjetoLei />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Router>

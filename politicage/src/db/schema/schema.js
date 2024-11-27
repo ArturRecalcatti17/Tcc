@@ -13,6 +13,7 @@ export const userTable = pgTable('usuario', {
 
 export const politicosTable = pgTable('politico', {
   id: uuid("id").defaultRandom().notNull().primaryKey(),
+  id_externo: text('id_externo').notNull().unique(),
   nome: text('nome', { length: 256 }),
   dataNasc: date('data_nasc').notNull(),
   uf: text('uf').notNull(),
@@ -32,7 +33,8 @@ export const consultasHistorico = pgTable('consultas_historico', {
   id: uuid("id").defaultRandom().notNull().primaryKey(),
   condicaoEleitoral: text('condicao_eleitoral').notNull(),
   descricaoStatus: text('descricao_status').notNull(),
-  siglaPartido: text('sigla_partido', { length: 10 })
+  siglaPartido: text('sigla_partido', { length: 10 }),
+  idPolitico: uuid("id_politico").notNull().references(() => politicosTable.id)
 });
 
 export const consultaDespesas = pgTable('consulta_despesas', {
@@ -49,11 +51,11 @@ export const comentario = pgTable('comentario', {
   comentario: text('comentario').notNull(),
   data_criacao: date('data_criacao').notNull(),
   data_alteracao: date('data_alteracao').notNull()
-})
+});
 
 export const avaliacao = pgTable('avaliacao', {
   id: uuid("id").defaultRandom().notNull().primaryKey(),
   id_usuario: uuid("id_usuario").notNull().references(() => userTable.id),
   id_politico: uuid("id_politico").notNull().references(() => politicosTable.id),
   avaliacao: integer('avaliacao').notNull()
-})
+});

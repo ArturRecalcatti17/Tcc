@@ -7,6 +7,7 @@ import local from '../assets/local.svg'
 import despesas from '../assets/despesas.svg'
 import doublePersons from '../assets/doublePersons.svg'
 import handPart from '../assets/handPart.svg'
+import { api, fetchDeputado, fetchDadosComplementares } from '../utils/api';
 
 export function BuscaPoliticos() {
   const [politicos, setPoliticos] = useState([]);
@@ -20,24 +21,23 @@ export function BuscaPoliticos() {
   const buscarPoliticos = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://dadosabertos.camara.leg.br/api/v2/deputados?ordem=ASC&ordenarPor=nome');
+      const response = await api.get('/deputados?ordem=ASC&ordenarPor=nome');
       
       const politicosComDetalhes = await Promise.all(
         response.data.dados.map(async (politico) => {
           try {
-            const detalhesResponse = await axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${politico.id}`);
+            const detalhesResponse = await api.get(`/deputados/${politico.id}`);
             const dataNascimento = detalhesResponse.data.dados.dataNascimento;
             const idade = calcularIdade(dataNascimento);
-            
-            return { ...politico, idade };
+            return { ...politico, idade, id_externo: politico.id.toString() };
           } catch (error) {
-            console.error(`Erro ao buscar detalhes do deputado ${politico.nome}:`, error);
-            return { ...politico, idade: null };
+            console.warn(`Erro ao buscar detalhes do deputado ${politico.nome}:`, error);
+            return { ...politico, idade: null, id_externo: politico.id.toString() };
           }
         })
       );
 
-      const resultadosFiltrados = politicosComDetalhes.filter(politico => 
+      const resultadosFiltrados = politicosComDetalhes.filter(politico =>
         politico.nome.toLowerCase().includes(termoBusca.toLowerCase()) ||
         politico.siglaPartido.toLowerCase().includes(termoBusca.toLowerCase()) ||
         politico.siglaUf.toLowerCase().includes(termoBusca.toLowerCase())
@@ -53,19 +53,19 @@ export function BuscaPoliticos() {
 
   const calcularIdade = (dataNascimento) => {
     if (!dataNascimento) return null;
-    
+
     const hoje = new Date();
     const nascimento = new Date(dataNascimento);
     let idade = hoje.getFullYear() - nascimento.getFullYear();
-    
+
     const mesAtual = hoje.getMonth();
     const mesNascimento = nascimento.getMonth();
-    
-    if (mesNascimento > mesAtual || 
-        (mesNascimento === mesAtual && nascimento.getDate() > hoje.getDate())) {
+
+    if (mesNascimento > mesAtual ||
+      (mesNascimento === mesAtual && nascimento.getDate() > hoje.getDate())) {
       idade--;
     }
-    
+
     return idade;
   };
 
@@ -87,7 +87,7 @@ export function BuscaPoliticos() {
         />
         <button type="submit" className="btn-buscar">Buscar</button>
       </form>
-      
+
       {loading ? (
         <p>Carregando...</p>
       ) : (
@@ -96,56 +96,54 @@ export function BuscaPoliticos() {
             {politicos.slice(0, Math.ceil(politicos.length / 2)).map((politico) => (
               <li key={politico.id} className="politico-item">
                 <div className="imgbanner">
-                <img src={politico.urlFoto} alt={politico.nome} className='img' width="150" height="150"  />
-                <img src={doublePersons} className='doub' alt="" />
-                <img src={local} alt="" />
-                <img src={handPart} className='hand' alt="" />
-                <img src={despesas} alt="" />
-                <img src={clips2} className='clip' alt="" />
+                  <img src={politico.urlFoto} alt={politico.nome} className='img' width="150" height="150" />
+                  <img src={doublePersons} className='doub' alt="" />
+                  <img src={local} alt="" />
+                  <img src={handPart} className='hand' alt="" />
+                  <img src={despesas} alt="" />
+                  <img src={clips2} className='clip' alt="" />
                 </div>
 
-                <div className='itensbanner' >
-                <h3>{politico.nome}</h3>
+                <div className='itensbanner'>
+                  <h3>{politico.nome}</h3>
                   <p>{politico.idade} anos</p>
                   <p>{politico.siglaPartido}</p>
                   <p>{politico.siglaUf}</p>
-                <Link to={`/politico/${politico.id}`} className="btn-detalhes">
-                  DESPESAS
-                </Link>
-                <Link to={`/politico/${politico.id}`} className="btn-detalhes">
-                  HISTÓRICO
-                </Link>
+                  <Link to={`/politico/${politico.id_externo}`} className="btn-detalhes">
+                    DESPESAS
+                  </Link>
+                  <Link to={`/politico/${politico.id_externo}`} className="btn-detalhes">
+                    HISTÓRICO
+                  </Link>
                 </div>
-
               </li>
             ))}
           </ul>
           <ul className="lista-politicos">
-            {politicos.slice( Math.ceil(politicos.length / 2)).map((politico) => (
+            {politicos.slice(Math.ceil(politicos.length / 2)).map((politico) => (
               <li key={politico.id} className="politico-item">
-              <div className="imgbanner">
-              <img src={politico.urlFoto} alt={politico.nome} className='img' width="150" height="150"  />
-              <img src={doublePersons} className='doub' alt="" />
-              <img src={local} alt="" />
-              <img src={handPart} className='hand' alt="" />
-              <img src={despesas} alt="" />
-              <img src={clips2} className='clip' alt="" />
-              </div>
+                <div className="imgbanner">
+                  <img src={politico.urlFoto} alt={politico.nome} className='img' width="150" height="150" />
+                  <img src={doublePersons} className='doub' alt="" />
+                  <img src={local} alt="" />
+                  <img src={handPart} className='hand' alt="" />
+                  <img src={despesas} alt="" />
+                  <img src={clips2} className='clip' alt="" />
+                </div>
 
-              <div className='itensbanner' >
-              <h3>{politico.nome}</h3>
-                <p>{politico.idade} anos</p>
-                <p>{politico.siglaPartido}</p>
-                <p>{politico.siglaUf}</p>
-              <Link to={`/politico/${politico.id}`} className="btn-detalhes">
-                DESPESAS
-              </Link>
-              <Link to={`/politico/${politico.id}`} className="btn-detalhes">
-                HISTÓRICO
-              </Link>
-              </div>
-
-            </li>
+                <div className='itensbanner'>
+                  <h3>{politico.nome}</h3>
+                  <p>{politico.idade} anos</p>
+                  <p>{politico.siglaPartido}</p>
+                  <p>{politico.siglaUf}</p>
+                  <Link to={`/politico/${politico.id_externo}`} className="btn-detalhes">
+                    DESPESAS
+                  </Link>
+                  <Link to={`/politico/${politico.id_externo}`} className="btn-detalhes">
+                    HISTÓRICO
+                  </Link>
+                </div>
+              </li>
             ))}
           </ul>
         </div>

@@ -20,11 +20,13 @@ async function inserirDeputados() {
     for (const deputado of deputados) {
       // 1. Inserir dados básicos do político
       const [politico] = await db.insert(politicosTable).values({
+        id_externo: deputado.id.toString(),
         nome: deputado.nome,
         dataNasc: new Date(deputado.dataNascimento),
         uf: deputado.siglaUf,
         cidade: deputado.municipioNascimento
       }).returning();
+
 
       // 2. Inserir histórico
       const [historico] = await db.insert(consultasHistorico).values({

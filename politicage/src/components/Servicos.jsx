@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/servicos.css'; // Importando o CSS para estilização
+import '../styles/servicos.css';
 
 export function Servicos() {
   return (

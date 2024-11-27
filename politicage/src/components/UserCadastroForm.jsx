@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { db } from '../db/config'; // Ajuste o caminho conforme necessário
-import { userTable } from '../db/schema/schema'; // Ajuste o caminho conforme necessário
+import { db } from '../db/config'; 
+import { userTable } from '../db/schema/schema'; 
 import { useNavigate } from 'react-router-dom';
 import '../styles/userCadastro.css'
 
