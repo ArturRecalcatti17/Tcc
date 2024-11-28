@@ -178,7 +178,9 @@ export function ConfiguracoesUsuario() {
 
   return (
     <section className="configuracoes-section">
+
       <div className="configuracoes-container">
+<button onClick={() => navigate(-1)} className="btn-voltarcu">Voltar</button>
         <h1>Configurações da Conta</h1>
         
         {error && <div className="error-message">{error}</div>}
@@ -277,6 +279,7 @@ export function ConfiguracoesUsuario() {
             >
               Sair
             </button>
+
           </div>
         </form>
       </div>

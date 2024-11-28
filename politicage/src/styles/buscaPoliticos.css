@@ -136,3 +136,15 @@ h3 {
 .hand {
   height: 70px !important;
 }
+
+.btn-voltarbp {
+  width: 100px;
+  margin: 0;
+  margin-right: 1700px;
+  margin-top: 70px;
+  margin-bottom: -130px;
+  border: none;
+  color: white;
+  background-color: #237B3B;
+cursor: pointer;
+}

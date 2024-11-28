@@ -88,7 +88,7 @@ export function Dashboard() {
                 <hr />
                 <p className='link'>{deputadoAleatorio.estado}</p>
                 <hr />
-                <Link to={`/politico/${deputadoAleatorio.id}`}><p>Histórico</p></Link>
+                <Link to={`/politico/${deputadoAleatorio.id}`}><p>Ver Detalhes</p></Link>
               </>
             ) : (
               <p className='carregando'>Carregando dados do deputado...</p>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
 import { Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/buscaPoliticos.css';
 import clips2 from '../assets/clips2.svg'
 import local from '../assets/local.svg'
@@ -13,6 +14,7 @@ export function BuscaPoliticos() {
   const [politicos, setPoliticos] = useState([]);
   const [termoBusca, setTermoBusca] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     buscarPoliticos();
@@ -76,6 +78,8 @@ export function BuscaPoliticos() {
 
   return (
     <div className="busca-politicos">
+
+<button onClick={() => navigate(-1)} className="btn-voltarbp">Voltar</button>
       <h1>Busca de Políticos</h1>
       <form onSubmit={handleSubmit} className="busca-form">
         <input
