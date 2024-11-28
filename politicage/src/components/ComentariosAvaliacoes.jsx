@@ -4,6 +4,7 @@ import { comentario, avaliacao, politicosTable } from '../db/schema/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import '../styles/comentariosAvaliacoes.css';
 
+
 export function ComentariosAvaliacoes({ idPolitico }) {
   const [comentarios, setComentarios] = useState([]);
   const [avaliacoes, setAvaliacoes] = useState([]);
@@ -14,14 +15,15 @@ export function ComentariosAvaliacoes({ idPolitico }) {
   const [editandoComentario, setEditandoComentario] = useState(null);
   const [comentarioEditado, setComentarioEditado] = useState('');
 
+
   const carregarDados = async () => {
     if (!idPolitico) {
       setError('ID do político não fornecido');
       return;
     }
 
+
     try {
-      // Buscar político existente
       const politico = await db
         .select({
           id: politicosTable.id,
@@ -32,10 +34,11 @@ export function ComentariosAvaliacoes({ idPolitico }) {
         .where(eq(politicosTable.id_externo, idPolitico))
         .limit(1);
 
+
       let politicoId;
 
+
       if (!politico.length) {
-        // Criar novo político se não existir
         const [novoPolitico] = await db
           .insert(politicosTable)
           .values({
@@ -51,7 +54,7 @@ export function ComentariosAvaliacoes({ idPolitico }) {
         politicoId = politico[0].id;
       }
 
-      // Buscar comentários e avaliações
+
       const [comentariosData, avaliacoesData] = await Promise.all([
         db
           .select()
@@ -62,8 +65,9 @@ export function ComentariosAvaliacoes({ idPolitico }) {
           .select()
           .from(avaliacao)
           .where(eq(avaliacao.id_politico, politicoId))
-          .orderBy(desc(avaliacao.data_criacao))
+          .orderBy(desc(avaliacao.id_politico))
       ]);
+
 
       setComentarios(comentariosData);
       setAvaliacoes(avaliacoesData);
@@ -76,9 +80,11 @@ export function ComentariosAvaliacoes({ idPolitico }) {
     }
   };
 
+
   useEffect(() => {
     carregarDados();
   }, [idPolitico]);
+
 
   const handleComentarioSubmit = async (e) => {
     e.preventDefault();
@@ -87,8 +93,8 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       if (!usuarioId) {
         setError('Usuário não está logado.');
         return;
-        
       }
+
 
       const politicoExiste = await db
         .select()
@@ -96,12 +102,15 @@ export function ComentariosAvaliacoes({ idPolitico }) {
         .where(eq(politicosTable.id_externo, idPolitico))
         .limit(1);
 
+
       if (!politicoExiste.length) {
         setError('Político não encontrado.');
         return;
       }
 
+
       const politicoId = politicoExiste[0].id;
+
 
       await db.insert(comentario).values({
         id_politico: politicoId,
@@ -111,6 +120,7 @@ export function ComentariosAvaliacoes({ idPolitico }) {
         data_alteracao: new Date()
       }).returning();
 
+
       setNovoComentario('');
       await carregarDados();
     } catch (error) {
@@ -118,6 +128,7 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       setError('Erro ao adicionar comentário.');
     }
   };
+
 
   const handleAvaliacaoSubmit = async (e) => {
     e.preventDefault();
@@ -128,48 +139,29 @@ export function ComentariosAvaliacoes({ idPolitico }) {
         return;
       }
 
+
       const politicoExiste = await db
         .select()
         .from(politicosTable)
         .where(eq(politicosTable.id_externo, idPolitico))
         .limit(1);
 
+
       if (!politicoExiste.length) {
         setError('Político não encontrado.');
         return;
       }
 
+
       const politicoId = politicoExiste[0].id;
 
-      const avaliacaoExistente = await db
-        .select()
-        .from(avaliacao)
-        .where(
-          and(
-            eq(avaliacao.id_politico, politicoId),
-            eq(avaliacao.id_usuario, usuarioId)
-          )
-        );
 
-      if (avaliacaoExistente.length > 0) {
-        await db
-          .update(avaliacao)
-          .set({ avaliacao: Number(novaAvaliacao) })
-          .where(
-            and(
-              eq(avaliacao.id_politico, politicoId),
-              eq(avaliacao.id_usuario, usuarioId)
-            )
-          )
-          .returning();
-      } else {
-        await db.insert(avaliacao).values({
-          id_politico: politicoId,
-          id_usuario: usuarioId,
-          avaliacao: Number(novaAvaliacao),
-          data_criacao: new Date()
-        }).returning();
-      }
+      await db.insert(avaliacao).values({
+        id_politico: politicoId,
+        id_usuario: usuarioId,
+        avaliacao: novaAvaliacao
+      }).returning();
+
 
       setNovaAvaliacao(0);
       await carregarDados();
@@ -179,84 +171,11 @@ export function ComentariosAvaliacoes({ idPolitico }) {
     }
   };
 
-  const handleDeleteComentario = async (comentarioId) => {
-    if (!confirm('Tem certeza que deseja excluir este comentário?')) {
-      return;
-    }
-
-    try {
-      await db.delete(comentario)
-        .where(
-          and(
-            eq(comentario.id, comentarioId),
-            eq(comentario.id_usuario, usuarioAtual)
-          )
-        );
-      await carregarDados();
-    } catch (error) {
-      console.error('Erro ao deletar comentário:', error);
-      setError('Erro ao deletar comentário.');
-    }
-  };
-
-  const handleDeleteAvaliacao = async (avaliacaoId) => {
-    if (!confirm('Tem certeza que deseja excluir esta avaliação?')) {
-      return;
-    }
-
-    try {
-      await db.delete(avaliacao)
-        .where(
-          and(
-            eq(avaliacao.id, avaliacaoId),
-            eq(avaliacao.id_usuario, usuarioAtual)
-          )
-        );
-      await carregarDados();
-    } catch (error) {
-      console.error('Erro ao deletar avaliação:', error);
-      setError('Erro ao deletar avaliação.');
-    }
-  };
-
-  const handleEditarComentario = (comentario) => {
-    setEditandoComentario(comentario.id);
-    setComentarioEditado(comentario.comentario);
-  };
-  
-  const handleSalvarEdicao = async () => {
-    try {
-      await db.update(comentario)
-        .set({ 
-          comentario: comentarioEditado,
-          data_alteracao: new Date()
-        })
-        .where(
-          and(
-            eq(comentario.id, editandoComentario),
-            eq(comentario.id_usuario, usuarioAtual)
-          )
-        )
-        .returning();
-      
-      setEditandoComentario(null);
-      setComentarioEditado('');
-      await carregarDados();
-    } catch (error) {
-      console.error('Erro ao editar comentário:', error);
-      setError('Erro ao editar comentário.');
-    }
-  };
-  
-  const handleCancelarEdicao = () => {
-    setEditandoComentario(null);
-    setComentarioEditado('');
-  };
 
   return (
-    <div className="comentarios-container">
+    <div>
       {error && <div className="error-message">{error}</div>}
-      
+     
       <div className="form-section">
         <form onSubmit={handleComentarioSubmit}>
           <textarea
@@ -268,9 +187,10 @@ export function ComentariosAvaliacoes({ idPolitico }) {
           <button type="submit">Comentar</button>
         </form>
 
+
         <form onSubmit={handleAvaliacaoSubmit}>
-          <select 
-            value={novaAvaliacao} 
+          <select
+            value={novaAvaliacao}
             onChange={(e) => setNovaAvaliacao(Number(e.target.value))}
             required
           >
@@ -285,6 +205,7 @@ export function ComentariosAvaliacoes({ idPolitico }) {
         </form>
       </div>
 
+
       <div className="content-section">
         <div className="comentarios-list">
           <h3>Comentários</h3>
@@ -293,54 +214,9 @@ export function ComentariosAvaliacoes({ idPolitico }) {
               {comentarios.map((com) => (
                 <li key={com.id} className="comentario-item">
                   <div className="comentario-content">
-                    {editandoComentario === com.id ? (
-                      <div className="edit-form">
-                        <textarea
-                          value={comentarioEditado}
-                          onChange={(e) => setComentarioEditado(e.target.value)}
-                          className="edit-textarea"
-                        />
-                        <div className="edit-buttons">
-                          <button 
-                            onClick={() => handleSalvarEdicao()}
-                            className="btn-save"
-                          >
-                            Salvar
-                          </button>
-                          <button 
-                            onClick={handleCancelarEdicao}
-                            className="btn-cancel"
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <p>{com.comentario}</p>
-                        <small>Data: {new Date(com.data_criacao).toLocaleDateString()}</small>
-                        {com.data_alteracao && com.data_alteracao !== com.data_criacao && (
-                          <small> (Editado em {new Date(com.data_alteracao).toLocaleDateString()})</small>
-                        )}
-                      </>
-                    )}
+                    <p>{com.comentario}</p>
+                    <small>Data: {new Date(com.data_criacao).toLocaleDateString()}</small>
                   </div>
-                  {usuarioAtual === com.id_usuario && !editandoComentario && (
-                    <div className="action-buttons">
-                      <button 
-                        onClick={() => handleEditarComentario(com)}
-                        className="btn-edit"
-                      >
-                        Editar
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteComentario(com.id)}
-                        className="btn-delete"
-                      >
-                        Excluir
-                      </button>
-                    </div>
-                  )}
                 </li>
               ))}
             </ul>
@@ -348,6 +224,7 @@ export function ComentariosAvaliacoes({ idPolitico }) {
             <p>Nenhum comentário ainda.</p>
           )}
         </div>
+
 
         <div className="avaliacoes-list">
           <h3>Avaliações</h3>
@@ -358,14 +235,6 @@ export function ComentariosAvaliacoes({ idPolitico }) {
                   <div className="avaliacao-content">
                     <p>Nota: {aval.avaliacao}</p>
                   </div>
-                  {usuarioAtual === aval.id_usuario && (
-                    <button 
-                      onClick={() => handleDeleteAvaliacao(aval.id)}
-                      className="btn-delete"
-                    >
-                      Excluir
-                    </button>
-                  )}
                 </li>
               ))}
             </ul>

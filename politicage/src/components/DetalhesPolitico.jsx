@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ComentariosAvaliacoes } from './ComentariosAvaliacoes';
 import '../styles/detalhesPolitico.css';
 
 
@@ -10,31 +11,31 @@ export function DetalhesPolitico() {
   const [politico, setPolitico] = useState(null);
   const [despesas, setDespesas] = useState([]);
   const [eventos, setEventos] = useState([]);
+  const [ocupacoes, setOcupacoes] = useState([]); // Adicionando estado para ocupações
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [ocupacoes, setOcupacoes] = useState([]);
 
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-      
-      
+     
       try {
         const [politicoRes, despesasRes, eventosRes, ocupacoesRes] = await Promise.all([
           axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}`),
           axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/despesas`),
           axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/eventos`),
-          axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/ocupacoes`)
+          axios.get(`https://dadosabertos.camara.leg.br/api/v2/deputados/${id}/ocupacoes`) // Adicionando a chamada para ocupações
         ]);
-        
+       
         localStorage.setItem('ultimoDeputadoId', id);
+
 
         setPolitico(politicoRes.data.dados);
         setDespesas(despesasRes.data.dados || []);
         setEventos(eventosRes.data.dados || []);
-        setOcupacoes(ocupacoesRes.data.dados || []);
+        setOcupacoes(ocupacoesRes.data.dados || []); // Armazenando ocupações
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
         setError('Não foi possível carregar os dados.');
@@ -57,19 +58,18 @@ export function DetalhesPolitico() {
     <div className="detalhes-politico">
       <section className="navbarD">
         <ul>
-        <ul>
-    <li><a href="#capitulo1">Identidade</a></li>
-    <li><a href="#capitulo2">Gastos Públicos</a></li>
-    <li><a href="#capitulo3">Eventos</a></li>
-    <li><a href="#capitulo4">Ocupações</a></li>
-</ul>
+          <li><a href="#capitulo1">Identidade</a></li>
+          <li><a href="#capitulo2">Gastos Públicos</a></li>
+          <li><a href="#capitulo3">Eventos</a></li>
+          <li><a href="#capitulo4">Ocupações</a></li>
+          <li><a href="#capitulo5">Comentários e Avaliações</a></li> {/* Atualizando o link para Comentários e Avaliações */}
         </ul>
-      </section >
+      </section>
       <button onClick={() => navigate(-1)} className="btn-voltar">Voltar</button>
-      <h1  id="capitulo1">{politico.nomeCivil}</h1>
-      <div className="info-basica" >
+      <h1 id="capitulo1">{politico.nomeCivil}</h1>
+      <div className="info-basica">
         <div className="imgDep">
-        <img src={politico.ultimoStatus.urlFoto} alt={politico.nomeCivil} />
+          <img src={politico.ultimoStatus.urlFoto} alt={politico.nomeCivil} />
         </div>
         <div className='underImg'>
           <p><strong>Nome Parlamentar: </strong> {politico.ultimoStatus.nomeEleitoral}</p>
@@ -139,9 +139,9 @@ export function DetalhesPolitico() {
                 <li key={index}>
                   <h3>{ocupacao.titulo}</h3>
                   <p><strong>UF:</strong> {ocupacao.entidadeUF ? ocupacao.entidadeUF : 'vazio'}</p>
-                  <p><strong>País:</strong> {ocupacao.entidadePais ? ocupacao.entidadeUF : 'vazio'}</p>
+                  <p><strong>País:</strong> {ocupacao.entidadePais ? ocupacao.entidadePais : 'vazio'}</p>
                   <p><strong>Ano de Início:</strong> {ocupacao.anoInicio ? ocupacao.anoInicio : 'vazio'}</p>
-                  <p><strong>Ano de Fim:</strong>{ ocupacao.anoFim ? ocupacao.anoFim : 'vazio'}</p>
+                  <p><strong>Ano de Fim:</strong> {ocupacao.anoFim ? ocupacao.anoFim : 'vazio'}</p>
                 </li>
               ))}
             </ul>
@@ -150,9 +150,10 @@ export function DetalhesPolitico() {
           )}
         </div>
       </section>
+      <section className='ComentariosAvaliacoes' id="capitulo5">
+        <h1>Comentários e Avaliações</h1>
+        <ComentariosAvaliacoes idPolitico={id} />
+      </section>
     </div>
   );
 }
-
-
-
