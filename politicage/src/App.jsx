@@ -6,19 +6,23 @@ import { BuscaPoliticos } from './components/BuscaPolitico';
 import { DetalhesPolitico } from './components/DetalhesPolitico';
 import { HistoricoConsultas } from './components/HistoricoConsultas';
 import { ConfiguracoesUsuario } from './components/ConfiguracoesUsuario';
-import {SobreNos} from './components/sobreNos';
-import {Servicos} from './components/Servicos'
-import {Navbar} from './components/NavBar'
+import { SobreNos } from './components/sobreNos';
+import { Servicos } from './components/Servicos';
+import { Navbar } from './components/NavBar';
+import { Politicos } from './components/Politicos';
+
 
 function ProtectedRoute({ children }) {
     const isLoggedIn = localStorage.getItem('usuarioLogado') === 'true';
-    return isLoggedIn ? children : <Navigate to="/" />; 
+    return isLoggedIn ? children : <Navigate to="/" />;
 }
+
 
 function LoginProtectedRoute({ children }) {
     const isLoggedIn = localStorage.getItem('usuarioLogado') === 'true';
     return isLoggedIn ? <Navigate to="/dashboard" /> : children;
 }
+
 
 export function App() {
     return (
@@ -45,6 +49,11 @@ export function App() {
                         <DetalhesPolitico />
                     </ProtectedRoute>
                 } />
+                <Route path="/politicosExemplo" element={
+                    <ProtectedRoute>
+                        <Politicos />
+                    </ProtectedRoute>
+                } />
                 <Route path="/configuracoes-usuario" element={
                     <ProtectedRoute>
                         <ConfiguracoesUsuario />
@@ -55,5 +64,5 @@ export function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Router>
-    );  
+    );
 }

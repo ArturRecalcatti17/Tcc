@@ -1,0 +1,77 @@
+.tituloPoli {
+  margin-top: 120px;
+}
+
+.ulDosPoli {
+  display: flex;
+  width: 100%;  
+  flex-direction: column;
+  height: auto;
+  justify-content: center;
+}
+
+.formDosPoli {
+  display: flex;
+  margin-bottom: 40px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.liDosPoli {
+  display: flex;
+  margin-bottom: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.editarButtonp {
+  width: 100px;
+  margin-top: 10px;
+  border: none;
+  margin-bottom: 10px;
+  color: white;
+ }
+
+ .excluirButtonp {
+  width: 100px;
+  margin-top: 10px;
+  border: none;
+  background-color: #770606;
+  color: white;
+ }
+
+ .inputEdic {
+  color: white;
+  font-size: 20px;
+  align-self: center;
+  border: 1px solid black;
+  text-align: center;
+  margin-bottom: -120px;
+ }
+
+ .spanNome {
+  color: white;
+  margin-bottom: 30px;
+ }
+
+ .atualizar {
+  width: 100px;
+  margin-top: 130px;
+  align-self: center;
+  border: none;
+  margin-bottom: 10px;
+  width: 190px;
+  background-color: gray;
+  color: white;
+ }
+
+ .cancelar {
+  width: 100px;
+  width: 190px;
+  margin-top: 10px;
+  border: none;
+  align-self: center;
+  background-color: #a03535;
+  color: white;
+ }

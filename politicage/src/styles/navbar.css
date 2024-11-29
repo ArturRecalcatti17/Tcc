@@ -6,7 +6,9 @@
   left: 0;
   z-index: 1000;
   margin-bottom: 20px;
+  backdrop-filter: blur(10px); /* Efeito de desfoque */
 }
+
 
 .navbar-container {
   display: flex;
@@ -17,9 +19,11 @@
   width: 100%;
 }
 
+
 .navbar-left {
   flex: 1;
 }
+
 
 .navbar-center {
   flex: 1;
@@ -27,11 +31,13 @@
   justify-content: center;
 }
 
+
 .navbar-right {
   flex: 1;
   display: flex;
   justify-content: flex-end;
 }
+
 
 .navbar-logo {
   color: var(--green-300);
@@ -41,6 +47,7 @@
   letter-spacing: 0.5px;
 }
 
+
 .navbar-menu {
   list-style: none;
   display: flex;
@@ -49,9 +56,11 @@
   background-color: transparent !important;
 }
 
+
 .navbar-menu li {
   background-color: transparent !important;
 }
+
 
 .navbar-menu a {
   color: var(--white-100);
@@ -62,10 +71,12 @@
   transition: opacity 0.2s;
 }
 
+
 .navbar-menu a:hover {
   opacity: 1;
   text-decoration: none;
 }
+
 
 .dot {
   margin-top: 8px;
@@ -75,11 +86,13 @@
   border-radius: 50%;
 }
 
+
 .underdots {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
 }
+
 
 hr {
   display: block;
@@ -89,6 +102,7 @@ hr {
   border: none;
   margin: 15px 0;
 }
+
 
 .user-name, .spoon {
   color: white;

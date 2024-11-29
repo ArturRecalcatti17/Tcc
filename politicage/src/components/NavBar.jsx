@@ -38,7 +38,7 @@ export function Navbar() {
 
                 <div className="navbar-center">
                     <ul className="navbar-menu">
-                        <li><Link to="/sobre_nos">Sobre Nós</Link></li>
+                        <li><Link to="/sobre-nos">Sobre Nós</Link></li>
                         <li><Link to="/servicos">Serviços</Link></li>
                         <li><Link to="/buscar-politicos">Pesquisar</Link></li>
                     </ul>

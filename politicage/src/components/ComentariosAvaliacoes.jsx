@@ -5,6 +5,8 @@ import { eq, and, desc } from 'drizzle-orm';
 import '../styles/comentariosAvaliacoes.css';
 
 
+
+
 export function ComentariosAvaliacoes({ idPolitico }) {
   const [comentarios, setComentarios] = useState([]);
   const [avaliacoes, setAvaliacoes] = useState([]);
@@ -14,6 +16,9 @@ export function ComentariosAvaliacoes({ idPolitico }) {
   const [usuarioAtual] = useState(localStorage.getItem('usuarioId'));
   const [editandoComentario, setEditandoComentario] = useState(null);
   const [comentarioEditado, setComentarioEditado] = useState('');
+  const [editandoAvaliacao, setEditandoAvaliacao] = useState(null);
+
+
 
 
   const carregarDados = async () => {
@@ -21,6 +26,8 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       setError('ID do político não fornecido');
       return;
     }
+
+
 
 
     try {
@@ -35,7 +42,11 @@ export function ComentariosAvaliacoes({ idPolitico }) {
         .limit(1);
 
 
+
+
       let politicoId;
+
+
 
 
       if (!politico.length) {
@@ -55,6 +66,8 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       }
 
 
+
+
       const [comentariosData, avaliacoesData] = await Promise.all([
         db
           .select()
@@ -69,6 +82,8 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       ]);
 
 
+
+
       setComentarios(comentariosData);
       setAvaliacoes(avaliacoesData);
       setError(null);
@@ -81,9 +96,13 @@ export function ComentariosAvaliacoes({ idPolitico }) {
   };
 
 
+
+
   useEffect(() => {
     carregarDados();
   }, [idPolitico]);
+
+
 
 
   const handleComentarioSubmit = async (e) => {
@@ -96,11 +115,15 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       }
 
 
+
+
       const politicoExiste = await db
         .select()
         .from(politicosTable)
         .where(eq(politicosTable.id_externo, idPolitico))
         .limit(1);
+
+
 
 
       if (!politicoExiste.length) {
@@ -109,7 +132,11 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       }
 
 
+
+
       const politicoId = politicoExiste[0].id;
+
+
 
 
       await db.insert(comentario).values({
@@ -121,6 +148,8 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       }).returning();
 
 
+
+
       setNovoComentario('');
       await carregarDados();
     } catch (error) {
@@ -128,6 +157,8 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       setError('Erro ao adicionar comentário.');
     }
   };
+
+
 
 
   const handleAvaliacaoSubmit = async (e) => {
@@ -140,11 +171,15 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       }
 
 
+
+
       const politicoExiste = await db
         .select()
         .from(politicosTable)
         .where(eq(politicosTable.id_externo, idPolitico))
         .limit(1);
+
+
 
 
       if (!politicoExiste.length) {
@@ -153,7 +188,11 @@ export function ComentariosAvaliacoes({ idPolitico }) {
       }
 
 
+
+
       const politicoId = politicoExiste[0].id;
+
+
 
 
       await db.insert(avaliacao).values({
@@ -161,6 +200,8 @@ export function ComentariosAvaliacoes({ idPolitico }) {
         id_usuario: usuarioId,
         avaliacao: novaAvaliacao
       }).returning();
+
+
 
 
       setNovaAvaliacao(0);
@@ -172,10 +213,93 @@ export function ComentariosAvaliacoes({ idPolitico }) {
   };
 
 
+
+
+  const handleEditComentario = (comentario) => {
+    setEditandoComentario(comentario.id);
+    setComentarioEditado(comentario.comentario);
+  };
+
+
+
+
+  const handleUpdateComentario = async (e) => {
+    e.preventDefault();
+    try {
+      await db
+        .update(comentario)
+        .set({ comentario: comentarioEditado })
+        .where(eq(comentario.id, editandoComentario))
+        .returning();
+      setEditandoComentario(null);
+      setComentarioEditado('');
+      await carregarDados();
+    } catch (error) {
+      console.error('Erro ao atualizar comentário:', error);
+      setError('Erro ao atualizar comentário.');
+    }
+  };
+
+
+
+
+  const handleDeleteComentario = async (id) => {
+    try {
+      await db.delete(comentario).where(eq(comentario.id, id));
+      await carregarDados();
+    } catch (error) {
+      console.error('Erro ao excluir comentário:', error);
+      setError('Erro ao excluir comentário.');
+    }
+  };
+
+
+
+
+  const handleEditAvaliacao = (avaliacao) => {
+    setEditandoAvaliacao(avaliacao.id);
+    setNovaAvaliacao(avaliacao.avaliacao);
+  };
+
+
+
+
+  const handleUpdateAvaliacao = async (e) => {
+    e.preventDefault();
+    try {
+      await db
+        .update(avaliacao)
+        .set({ avaliacao: novaAvaliacao })
+        .where(eq(avaliacao.id, editandoAvaliacao))
+        .returning();
+      setEditandoAvaliacao(null);
+      setNovaAvaliacao(0);
+      await carregarDados();
+    } catch (error) {
+      console.error('Erro ao atualizar avaliação:', error);
+      setError('Erro ao atualizar avaliação.');
+    }
+  };
+
+
+
+
+  const handleDeleteAvaliacao = async (id) => {
+    try {
+      await db.delete(avaliacao).where(eq(avaliacao.id, id));
+      await carregarDados();
+    } catch (error) {
+      console.error('Erro ao excluir avaliação:', error);
+      setError('Erro ao excluir avaliação.');
+    }
+  };
+
+
+
+
   return (
     <div>
       {error && <div className="error-message">{error}</div>}
-     
       <div className="form-section">
         <form onSubmit={handleComentarioSubmit}>
           <textarea
@@ -214,8 +338,23 @@ export function ComentariosAvaliacoes({ idPolitico }) {
               {comentarios.map((com) => (
                 <li key={com.id} className="comentario-item">
                   <div className="comentario-content">
-                    <p>{com.comentario}</p>
-                    <small>Data: {new Date(com.data_criacao).toLocaleDateString()}</small>
+                    {editandoComentario === com.id ? (
+                      <form className='formEdicao' onSubmit={handleUpdateComentario}>
+                        <textarea
+                          value={comentarioEditado}
+                          onChange={(e) => setComentarioEditado(e.target.value)}
+                          required
+                        />
+                        <button className='confirmarEd' type="submit">Atualizar</button>
+                      </form>
+                    ) : (
+                      <>
+                        <p>{com.comentario}</p>
+                        <small>Data: {new Date(com.data_criacao).toLocaleDateString()}</small>
+                        <button className='editarButton' onClick={() => handleEditComentario(com)}>Editar</button>
+                        <button className='excluirButton' onClick={() => handleDeleteComentario(com.id)}>Excluir</button>
+                      </>
+                    )}
                   </div>
                 </li>
               ))}
@@ -233,7 +372,29 @@ export function ComentariosAvaliacoes({ idPolitico }) {
               {avaliacoes.map((aval) => (
                 <li key={aval.id}>
                   <div className="avaliacao-content">
-                    <p>Nota: {aval.avaliacao}</p>
+                    {editandoAvaliacao === aval.id ? (
+                      <form className='formEdicao' onSubmit={handleUpdateAvaliacao}>
+                        <select
+                          value={novaAvaliacao}
+                          onChange={(e) => setNovaAvaliacao(Number(e.target.value))}
+                          required
+                        >
+                          <option value="0">Selecione uma nota</option>
+                          <option value="1">1 - Muito Ruim</option>
+                          <option value="2">2 - Ruim</option>
+                          <option value="3">3 - Regular</option>
+                          <option value="4">4 - Bom</option>
+                          <option value="5">5 - Muito Bom</option>
+                        </select>
+                        <button className='confirmarEd' type="submit">Atualizar</button>
+                      </form>
+                    ) : (
+                      <>
+                        <p>Nota: {aval.avaliacao}</p>
+                        <button className='editarButton' onClick={() => handleEditAvaliacao(aval)}>Editar</button>
+                        <button className='excluirButton' onClick={() => handleDeleteAvaliacao(aval.id)}>Excluir</button>
+                      </>
+                    )}
                   </div>
                 </li>
               ))}
